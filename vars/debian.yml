@@ -1,0 +1,5 @@
+---
+trickster_dependencies:
+  - curl
+
+sysconfig_directory: "/etc/default"

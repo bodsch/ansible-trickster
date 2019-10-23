@@ -1,0 +1,7 @@
+---
+
+- name: restart trickster
+  systemd:
+    name: trickster
+    state: restarted
+  when: trickster_service_state != 'stopped'

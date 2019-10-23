@@ -1,0 +1,67 @@
+---
+
+- name: Install dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  register: _install_dep_packages
+  until: _install_dep_packages is success
+  retries: 5
+  delay: 2
+  with_items: "{{ trickster_dependencies }}"
+
+- name: Create the trickster group
+  group:
+    name: "{{ trickster_system_group }}"
+    state: present
+    system: true
+  when: trickster_system_group != "root"
+
+- name: Create the trickster user
+  user:
+    name: "{{ trickster_system_user }}"
+    groups: "{{ trickster_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: /
+  when: trickster_system_user != "root"
+
+- name: Download trickster binary  # noqa 301
+  command: |
+    curl
+      --location
+      --retry 5
+      --retry-delay 3
+      --output /tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
+      https://github.com/Comcast/trickster/releases/download/v{{ trickster_version }}/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
+  args:
+    warn: no
+
+- name: Unpack trickster binary  # noqa 301
+  command: |
+    gunzip
+      --force
+      --quiet
+      /tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
+  args:
+    chdir: /tmp
+    warn: no
+
+- name: Create /usr/local/bin
+  file:
+    path: /usr/local/bin
+    state: directory
+    mode: 0755
+
+- name: Propagate trickster binaries
+  copy:
+    src: "/tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}"
+    dest: "{{ trickster_bin }}"
+    mode: 0755
+    owner: root
+    group: root
+    remote_src: true
+  notify: restart trickster
+  when: not ansible_check_mode

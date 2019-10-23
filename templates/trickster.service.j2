@@ -1,0 +1,21 @@
+# -*- mode: conf -*-
+
+[Unit]
+Description=Dashboard Accelerator for Prometheus
+Documentation=https://github.com/Comcast/trickster
+After=network.target
+
+[Service]
+EnvironmentFile={{ sysconfig_directory }}/trickster
+User=trickster
+ExecStart={{ trickster_bin }} \
+  -config /etc/trickster \
+  -origin {{ trickster_origin_url }} \
+  -origin-type {{ trickster_origin_type }} \
+  -log-level {{ trickster_log_level }}
+
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,31 @@
+---
+
+- name: Copy the Trickster systemd service file
+  template:
+    src: trickster.service.j2
+    dest: /etc/systemd/system/trickster.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart trickster
+
+- name: Create Trickster config
+  template:
+    src: trickster.j2
+    dest: "{{ sysconfig_directory }}/trickster"
+
+- name: Create Trickster config for systemd unit file
+  template:
+    src: trickster.conf.j2
+    dest: /etc/trickster
+
+# - name: Allow Trickster port in SELinux on RedHat OS family
+#   seport:
+#     ports: "{{ trickster_web_listen_address.split(':')[-1] }}"
+#     proto: tcp
+#     setype: http_port_t
+#     state: present
+#   when:
+#     - ansible_version.full is version_compare('2.4', '>=')
+#     - ansible_selinux.status == "enabled"
+#
