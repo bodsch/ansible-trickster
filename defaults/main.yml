@@ -66,7 +66,8 @@ trickster_cache_redis_endpoint: '127.0.0.1:6379'
 # These conigurations are ignored by Redis (standard)
 # endpoints is used for Redis Cluster and Redis Sentinel to define a list of endpoints
 trickster_cache_redis_endpoints: []
-#  - 'redis:6379'
+#  - 'redis1:6379'
+#  - 'redis2:6379'
 
 # These conigurations are ignored by Redis (standard) and Redis Cluster
 # sentinel_master should be set when using Redis Sentinel to indicate the Master Node

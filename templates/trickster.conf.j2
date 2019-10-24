@@ -86,9 +86,9 @@ listen_port = {{trickster_proxy_server_listen_port}}
         # These conigurations are ignored by Redis (standard)
         # endpoints is used for Redis Cluster and Redis Sentinel to define a list of endpoints
         # default is ['redis:6379']
-        {% if trickster_cache_redis_endpoint is defined and trickster_cache_redis_endpoint | length > 0 %}
-        endpoints = [{{ trickster_cache_redis_endpoint | join(', ') }}]
-        {% endif %}
+        {% if trickster_cache_redis_endpoints is defined and trickster_cache_redis_endpoints | length > 0 -%}
+        endpoints = ['{{ trickster_cache_redis_endpoints | join("', '") }}']
+        {% endif -%}
         #
 
         # Supported by Redis Sentinel
