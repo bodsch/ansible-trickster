@@ -8,9 +8,9 @@ before_script:
 #  - apt-get -yq update
 #  - apt-get -yq install python-minimal python2.7 python2.7-dev python3.6 python3.6-dev python3.7 python3.7-dev python-pip
 #  - apt-get -yq install git
-  - apk install python2
-  - pip install tox
+  - apk add --no-cache  python2
   - pip install --upgrade pip
+  - pip install tox
   - pip install --requirement test-requirements.txt
   - docker -v
   - python -V
