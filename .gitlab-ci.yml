@@ -1,0 +1,24 @@
+---
+image: quay.io/ansible/molecule:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - apk add --no-cache git
+  - pip install tox
+  - docker -v
+  - python -V
+  - ansible --version
+  - molecule --version
+
+stages:
+  - tox
+
+tox:
+  stage: tox
+  script:
+    - tox -e py27-ansible25 -- molecule test -s default
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    PY_COLORS: 1
