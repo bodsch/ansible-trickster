@@ -7,7 +7,7 @@ services:
 before_script:
   - apt-get -yq update
   - apt-get -yq install python-minimal python2.7 python2.7-dev python3.6 python3.6-dev python3.7 python3.7-dev python-pip
-  - apk add --no-cache git
+  - apt-get -yq git
   - pip install tox
   - docker -v
   - python -V
@@ -20,7 +20,7 @@ stages:
 tox:
   stage: tox
   script:
-    - tox -e py27-ansible25 -- molecule test -s default
+    - tox -e py27-ansible27 -- molecule test -s default
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     PY_COLORS: 1
