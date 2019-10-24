@@ -63,5 +63,6 @@
     owner: root
     group: root
     remote_src: true
-  notify: restart trickster
+  notify:
+    - restart trickster
   when: not ansible_check_mode
