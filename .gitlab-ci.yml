@@ -1,14 +1,17 @@
 ---
-image: ubuntu:latest
+image: quay.io/ansible/molecule:latest
 
 services:
   - docker:dind
 
 before_script:
-  - apt-get -yq update
-  - apt-get -yq install python-minimal python2.7 python2.7-dev python3.6 python3.6-dev python3.7 python3.7-dev python-pip
-  - apt-get -yq install git
+#  - apt-get -yq update
+#  - apt-get -yq install python-minimal python2.7 python2.7-dev python3.6 python3.6-dev python3.7 python3.7-dev python-pip
+#  - apt-get -yq install git
+  - apk install python2
   - pip install tox
+  - pip install --upgrade pip
+  - pip install --requirement test-requirements.txt
   - docker -v
   - python -V
   - ansible --version
