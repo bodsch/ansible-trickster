@@ -7,6 +7,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 def test_files(host):
     files = [
+        "/etc/trickster",
         "/etc/systemd/system/trickster.service",
         "/usr/local/bin/trickster"
     ]

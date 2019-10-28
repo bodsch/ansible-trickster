@@ -28,16 +28,17 @@
     home: /
   when: trickster_system_user != "root"
 
-- name: Download trickster binary  # noqa 301
-  command: |
-    curl
-      --location
-      --retry 5
-      --retry-delay 3
-      --output /tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
-      https://github.com/Comcast/trickster/releases/download/v{{ trickster_version }}/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
-  args:
-    warn: no
+- name: download trickster binary to local folder
+  become: false
+  get_url:
+    url: "https://github.com/Comcast/trickster/releases/download/v{{ trickster_version }}/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz"
+    dest: "/tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz"
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  delegate_to: localhost
+  check_mode: false
 
 - name: Unpack trickster binary  # noqa 301
   command: |
@@ -45,24 +46,20 @@
       --force
       --quiet
       /tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
+  delegate_to: localhost
+  become: false
   args:
     chdir: /tmp
     warn: no
 
-- name: Create /usr/local/bin
-  file:
-    path: /usr/local/bin
-    state: directory
-    mode: 0755
-
-- name: Propagate trickster binaries
+- name: propagate trickster
   copy:
     src: "/tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}"
-    dest: "{{ trickster_bin }}"
+    dest: "/usr/local/bin/{{ item }}"
     mode: 0755
     owner: root
     group: root
-    remote_src: true
+  with_items:
+    - trickster
   notify:
     - restart trickster
-  when: not ansible_check_mode
