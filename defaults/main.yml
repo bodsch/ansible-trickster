@@ -8,7 +8,13 @@
 
 # upcomming version
 # https://github.com/Comcast/trickster/releases/download/v1.09-beta9/trickster-1.0.9.linux-amd64.gz
-trickster_version: '1.09-beta9'
+
+# https://github.com/tricksterproxy/trickster/releases
+# https://github.com/tricksterproxy/trickster/releases/download/v1.1.3/trickster-1.1.3.tar.gz
+
+trickster_release_download_url: https://github.com/tricksterproxy/trickster/releases
+
+trickster_version: '1.1.3'
 trickster_file_version: '1.0.9'
 
 trickster_system_user: trickster
@@ -45,6 +51,39 @@ trickster_origin_url: 'http://127.0.0.1:9091'
 # Valid options are: 'prometheus', 'influxdb', 'irondb', 'reverseproxycache' (or just 'rpc')
 # origin_type is a required configuration value
 trickster_origin_type: prometheus
+
+
+trickster_frontend:
+  listen_port: 8480
+  listen_address: ''
+  tls_listen_address: ''
+  tls_listen_port: 0
+  connections_limit: 0
+
+trickster_caches:
+  - default:
+    cache_type: memory
+    redis:
+      endpoint: 'redis:6379'
+      endpoints:
+        - redis:6379
+      protocol: tcp
+      db: 0
+    filesystem:
+      cache_path: /tmp/trickster
+    bbolt:
+      filename: trickster.db
+      bucket: trickster
+    badger:
+      directory: /tmp/trickster
+
+trickster_origins:
+  - default:
+    origin_type: prometheus
+    origin_url: http://prometheus:9090
+
+
+
 
 # options are 'bbolt', 'badger', 'filesystem', 'memory', and 'redis'
 # The default is 'memory'.

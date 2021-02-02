@@ -1,0 +1,21 @@
+---
+
+- name: download trickster binary to local folder
+  become: false
+  delegate_to: 127.0.0.1
+  get_url:
+    url: "{{ trickster_release_download_url }}/download/v{{ trickster_version }}/trickster-{{ trickster_version }}.tar.gz"
+    dest: "{{ trickster_local_tmp_directory }}/trickster-{{ trickster_version }}.tar.gz"
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  check_mode: false
+
+- name: extract trickster archive
+  become: false
+  delegate_to: 127.0.0.1
+  unarchive:
+    src: "{{ trickster_local_tmp_directory }}/trickster-{{ trickster_version }}.tar.gz"
+    dest: "{{ trickster_local_tmp_directory }}/"
+    copy:  no

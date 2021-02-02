@@ -1,65 +1,11 @@
 ---
 
-- name: Install dependencies
-  package:
-    name: "{{ item }}"
-    state: present
-  register: _install_dep_packages
-  until: _install_dep_packages is success
-  retries: 5
-  delay: 2
-  with_items: "{{ trickster_dependencies }}"
-
-- name: Create the trickster group
-  group:
-    name: "{{ trickster_system_group }}"
-    state: present
-    system: true
-  when: trickster_system_group != "root"
-
-- name: Create the trickster user
-  user:
-    name: "{{ trickster_system_user }}"
-    groups: "{{ trickster_system_group }}"
-    append: true
-    shell: /usr/sbin/nologin
-    system: true
-    createhome: false
-    home: /
-  when: trickster_system_user != "root"
-
-- name: download trickster binary to local folder
-  become: false
-  get_url:
-    url: "https://github.com/Comcast/trickster/releases/download/v{{ trickster_version }}/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz"
-    dest: "/tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz"
-  register: _download_archive
-  until: _download_archive is succeeded
-  retries: 5
-  delay: 2
-  delegate_to: localhost
-  check_mode: false
-
-- name: Unpack trickster binary  # noqa 301
-  command: |
-    gunzip
-      --force
-      --quiet
-      /tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}.gz
-  delegate_to: localhost
-  become: false
-  args:
-    chdir: /tmp
-    warn: no
-
 - name: propagate trickster
   copy:
-    src: "/tmp/trickster-{{ trickster_file_version }}.linux-{{ go_arch }}"
-    dest: "/usr/local/bin/{{ item }}"
+    src: "{{ trickster_local_tmp_directory }}/trickster-{{ trickster_version }}/bin/trickster-{{ trickster_version }}.linux-{{ go_arch }}"
+    dest: "/usr/local/bin/trickster"
     mode: 0755
     owner: root
     group: root
-  with_items:
-    - trickster
   notify:
     - restart trickster

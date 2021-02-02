@@ -1,6 +1,6 @@
 ---
 
-- name: Copy the Trickster systemd service file
+- name: create the Trickster systemd service file
   template:
     src: trickster.service.j2
     dest: /etc/systemd/system/trickster.service
@@ -9,12 +9,12 @@
     mode: 0644
   notify: restart trickster
 
-- name: Create Trickster config
+- name: create Trickster config
   template:
     src: trickster.j2
     dest: "{{ sysconfig_directory }}/trickster"
 
-- name: Create Trickster config for systemd unit file
+- name: create Trickster config for systemd unit file
   template:
     src: trickster.conf.j2
     dest: /etc/trickster
