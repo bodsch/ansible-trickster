@@ -1,26 +1,17 @@
 ---
-## General
-
-# current stable version
-# https://github.com/Comcast/trickster/releases/download/v0.1.10/trickster-0.1.10.linux-amd64.gz
-# trickster_version: '0.1.10'
-# trickster_file_version: '0.1.10'
-
-# upcomming version
-# https://github.com/Comcast/trickster/releases/download/v1.09-beta9/trickster-1.0.9.linux-amd64.gz
-
-# https://github.com/tricksterproxy/trickster/releases
-# https://github.com/tricksterproxy/trickster/releases/download/v1.1.3/trickster-1.1.3.tar.gz
-
 trickster_release_download_url: https://github.com/tricksterproxy/trickster/releases
 
-trickster_version: '1.1.3'
-trickster_file_version: '1.0.9'
+
+# https://github.com/trickstercache/trickster/releases/download/v1.1.5/trickster-1.1.5.tar.gz
+# https://github.com/trickstercache/trickster/releases/download/v2.0.0-beta2/trickster-2.0.0-beta2.tar.gz
+
+trickster_version: '2.0.0-beta2'
 
 trickster_system_user: trickster
 trickster_system_group: trickster
 
-trickster_bin: /usr/local/bin/trickster
+trickster_bin: /bin/trickster
+trickster_config_file: /etc/trickster.yml
 
 trickster_service_state: started
 
@@ -52,37 +43,76 @@ trickster_origin_url: 'http://127.0.0.1:9091'
 # origin_type is a required configuration value
 trickster_origin_type: prometheus
 
+trickster_main:
+  # default is 0, which means ignored
+  instance_id: 0
+  # default is /trickster/config
+  config_handler_path: /trickster/config
+  # default is /trickster/ping
+  ping_handler_path: /trickster/ping
+  # default is /trickster/health
+  health_handler_path: /trickster/health
+  # Options are: "metrics", "reload", "both", or "off"; default is both
+  pprof_server: both
+  # server_name defaults to os.Hostname() when left blank
+  server_name: ''
 
 trickster_frontend:
+  # # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
   listen_port: 8480
+  # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
+  # empty by default, listening on all interfaces
   listen_address: ''
+  # tls_listen_address defines the ip on which Tricksters Front-end TLS Proxy server listens.
+  # empty by default, listening on all interfaces
   tls_listen_address: ''
+  # tls_listen_port defines the port on which Tricksters Front-end TLS Proxy server listens.
+  # The default is 0, which means TLS is not used, even if certificates are configured below.
   tls_listen_port: 0
+  # connections_limit defines the maximum number of concurrent connections
+  # Tricksters Proxy server may handle at any time.
+  # 0 by default, unlimited.
   connections_limit: 0
 
 trickster_caches:
-  - default:
-    cache_type: memory
-    redis:
-      endpoint: 'redis:6379'
-      endpoints:
-        - redis:6379
-      protocol: tcp
-      db: 0
+  default:
+    provider: memory
+    # redis:
+    #   endpoint: 'redis:6379'
+    #   endpoints:
+    #     - redis:6379
+    #   protocol: tcp
+    #   db: 0
     filesystem:
       cache_path: /tmp/trickster
-    bbolt:
-      filename: trickster.db
-      bucket: trickster
-    badger:
-      directory: /tmp/trickster
+    # bbolt:
+    #   filename: trickster.db
+    #   bucket: trickster
+    # badger:
+    #   directory: /tmp/trickster
 
-trickster_origins:
-  - default:
+trickster_backends:
+  default:
+    provider: prometheus
+    is_default: true
     origin_type: prometheus
     origin_url: http://prometheus:9090
 
+trickster_rules: {}
 
+trickster_request_rewriters: {}
+
+trickster_tracing: {}
+
+trickster_metrics:
+  listen_port: 8481
+  listen_address: 127.0.0.1
+
+trickster_reloading: {}
+
+trickster_logging:
+  log_level: warn
+  log_file: /var/log/trickster.log
 
 
 # options are 'bbolt', 'badger', 'filesystem', 'memory', and 'redis'

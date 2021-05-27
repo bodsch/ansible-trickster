@@ -1,0 +1,35 @@
+# # Configuration Options for Request Routing Rules - see /docs/rule.md for more information
+{% if trickster_rules is defined and trickster_rules | count > 0 %}
+rules:
+{% set b = trickster_rules %}
+{{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
+{% else %}
+# rules:
+# # This example rule will route a request to the reader or writer backend based on the Username header
+#   example:
+#     input_source: header       # path, host, param
+#     input_key: Authorization   # Authorization: Basic SomeBase64EncodedString
+#     input_type: string
+#     input_encoding: base64
+#     input_index: 1               # split the header value into zero-indexed parts at spaces, use part 1
+#     input_delimiter:
+#     operation: prefix              # check the input value matches any of the defined cases:
+#     next_route: reader-cluster # by default, route to reader-cluster backend (would need to be defined)
+# #  Other available rule configs that are not pertinent to this example:
+#     ingress_req_rewriter_name: '' # name of a rewriter to process the request before evaluating the rule
+#     egress_req_rewriter_name: ''  # name of a rewriter to process the request after evaluating the rule
+#   #                                 # and handing off to the new route
+#     nomatch_req_rewriter_name: '' # name of a rewriter to run the request through when there are no matching cases
+#     operation_arg: '' # an argument to pass to the operation.
+#     redirect_url: '' # provides a URL to redirect the request in the default case, rather than handing to next_route
+#     max_rule_executions: 16        # limits the max number of per-Request rule-based hops to avoid execution loops.
+
+#     cases:
+#       "1":
+#         matches: ['johndoe:', 'janedoe:']  # if the Authorization header has user johndoe or janedoe,
+#         next_route: writer-cluster       # route the request to hypothetical writer-cluster backend
+#   #     Other available case configs that are not pertinent to this example:
+#         req_rewriter_name: '' # name of a rewriter to process the request if it matches this case
+#                               # case rewrites are executed prior to giving control back to the rule
+#         redirect_url: ''  # provides a URL to redirect the request if it matches this case
+{% endif %}

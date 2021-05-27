@@ -2,18 +2,13 @@
 
 [Unit]
 Description=Dashboard Accelerator for Prometheus and HTTP Reverse Proxy Cache
-Documentation=https://github.com/Comcast/trickster
+Documentation=https://github.com/trickstercache/trickster
 After=network.target
 
 [Service]
 EnvironmentFile=-{{ sysconfig_directory }}/trickster
 User=trickster
-ExecStart={{ trickster_bin }} \
-  -config /etc/trickster \
-  -origin {{ trickster_origin_url }} \
-  -origin-type {{ trickster_origin_type }} \
-  -log-level {{ trickster_log_level }} \
-  ${TRICKSTER_OPTS}
+ExecStart={{ trickster_bin }} ${TRICKSTER_OPTS}
 
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always

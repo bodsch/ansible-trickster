@@ -19,3 +19,5 @@
     src: "{{ trickster_local_tmp_directory }}/trickster-{{ trickster_version }}.tar.gz"
     dest: "{{ trickster_local_tmp_directory }}/"
     copy:  no
+
+...

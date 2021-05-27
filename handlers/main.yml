@@ -5,3 +5,5 @@
     name: trickster
     state: restarted
   when: trickster_service_state != 'stopped'
+
+...

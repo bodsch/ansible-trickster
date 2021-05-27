@@ -2,8 +2,10 @@ molecule
 molecule-docker
 docker
 ansible-lint
-pytest-testinfra
-jmespath
 yamllint
 flake8
+jmespath
+pytest
+pytest-testinfra
 tox
+tox-gh-actions

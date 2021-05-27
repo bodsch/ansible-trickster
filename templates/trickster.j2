@@ -1,25 +1,28 @@
 # ansible
 
-#Usage of trickster:
-#  -config string
-#        Path to Trickster Config File
-#  -instance-id int
-#        Instance ID is for running multiple Trickster processes from the same config while logging to their own files.
-#  -log-level string
-#        Level of Logging to use (debug, info, warn, error)
-#  -metrics-port int
-#        Port that the /metrics endpoint will listen on.
-#  -origin string
-#        URL to the Origin. Enter it like you would in grafana, e.g., http://prometheus:9090
-#  -origin-type string
-#        Type of origin (prometheus, influxdb)
-#  -proxy-port int
-#        Port that the primary Proxy server will listen on.
-#  -version
-#        Prints trickster version
+# Usage of trickster:
+#   -config string
+#         Path to Trickster Config File
+#   -instance-id int
+#         Instance ID is for running multiple Trickster processes from the same config while logging to their own files
+#   -log-level string
+#         Level of Logging to use (debug, info, warn, error)
+#   -metrics-port int
+#         Port that the /metrics endpoint will listen on
+#   -origin-type string
+#         Type of origin (prometheus, influxdb)
+#   -origin-url string
+#         URL to the Origin. Enter it like you would in grafana, e.g., http://prometheus:9090
+#   -proxy-port int
+#         Port that the primary Proxy server will listen on
+#   -validate-config
+#         Validates a Trickster config and exits without running the server
+#   -version
+#         Prints the Trickster version
+
 
 TRICKSTER_OPTS=
-TRICKSTER_OPTS="${TRICKSTER_OPTS} -config /etc/trickster"
-TRICKSTER_OPTS="${TRICKSTER_OPTS} -origin {{ trickster_origin_url }}"
-TRICKSTER_OPTS="${TRICKSTER_OPTS} -origin-type {{ trickster_origin_type }}"
-TRICKSTER_OPTS="${TRICKSTER_OPTS} -log-level {{ trickster_log_level }}"
+TRICKSTER_OPTS="${TRICKSTER_OPTS} --config {{ trickster_config_file }}"
+TRICKSTER_OPTS="${TRICKSTER_OPTS} --origin-url {{ trickster_origin_url }}"
+# TRICKSTER_OPTS="${TRICKSTER_OPTS} -origin-type {{ trickster_origin_type }}"
+# TRICKSTER_OPTS="${TRICKSTER_OPTS} -log-level {{ trickster_log_level }}"

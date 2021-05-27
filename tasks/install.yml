@@ -3,9 +3,18 @@
 - name: propagate trickster
   copy:
     src: "{{ trickster_local_tmp_directory }}/trickster-{{ trickster_version }}/bin/trickster-{{ trickster_version }}.linux-{{ go_arch }}"
-    dest: "/usr/local/bin/trickster"
+    dest: "/usr/local/bin/trickster_{{ trickster_version }}"
     mode: 0755
     owner: root
     group: root
+
+- name: create link from trickster_{{ trickster_version }}
+  file:
+    src: "/usr/local/bin/trickster_{{ trickster_version }}"
+    dest: "{{ trickster_bin }}"
+    state: link
+    force: true
   notify:
     - restart trickster
+
+...
