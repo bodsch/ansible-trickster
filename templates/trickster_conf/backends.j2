@@ -1,0 +1,314 @@
+# Configuration options for mapping Origin(s)
+
+{% if trickster_backends is defined and trickster_backends | count > 0 %}
+{% set b = trickster_backends %}
+backends:
+{{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
+{% else %}
+backends:
+  # example backend named default. default is always created with these settings unless a different backend is defined here.
+  # access this backend via http[s]://trickster-fqdn/default/ unless path_routing_disabled is true
+  default:
+    # provider identifies the backend provider.
+    # Valid options are: prometheus, influxdb, clickhouse, irondb, reverseproxycache (or just rpc)
+    # provider is a required configuration value
+    provider: prometheus
+
+    # for prometheus backends, you can configure label injection as follows:
+    # prometheus:
+    #   labels:
+    #     labelname: value
+
+    # origin_url provides the base upstream URL for all proxied requests to this origin.
+    # it can be as simple as http://example.com or as complex as https://example.com:8443/path/prefix
+    # origin_url is a required configuration value
+    origin_url: http://prometheus:9090
+
+    # is_default describes whether this backend is the default backend considered when routing http requests
+    # it is false, by default; but if you only have a single backend configured, is_default will be true unless explicitly set to false
+    is_default: true
+#     # hosts indicates which FQDNs requested by the client should route to this Origin (in addition to path-based routing)
+#     # if you are using TLS, all FQDNs should be included in the certfiicate common names to avoid insecure warnings to clients
+#     # default setting is empty list. List format is: hosts: [ 1.example.com, 2.example.com ]
+#     hosts: []
+
+#     # cache_name identifies the name of the cache (configured above) that you want to use with this backend. default is default
+#     cache_name: default
+
+#     # forwarded_headers indicates whether Trickster should use Forwarded, X-Forwarded-*
+#     # or no forwarded headers when communicating with backends. A Via header is always sent,
+#     # regardless of this values setting.
+#     # Options are standard, x, both, or none; default is standard
+#     forwarded_headers: standard
+
+#     # cache_key_prefix defines the prefix this backend appends to cache keys. When using a shared cache like Redis,
+#     # this can help partition multiple trickster instances that may have the same same hostname or ip address (the default prefix)
+#     cache_key_prefix: example
+
+#     # negative_cache_name identifies the name of the negative cache (configured above) to be used with this backend. default is default
+#     negative_cache_name: default
+
+#     # path_routing_disabled will prevent the backend from being accessible via /backend_name/ path to Trickster. Disabling this requires
+#     # the backend to have hosts configured (see below) or be the target of a rule backend, or it will be unreachable.
+#     # default is false
+#     path_routing_disabled: false
+
+#     # rule_name provides the name of the rule config to be used by this backend.
+#     # This is only effective if the provider is rule
+#     rule_name: example-rule
+
+#     # req_rewriter_name is the name of a configured rewriter (in the request_rewriters key) that modifies the request prior to
+#     # processing by the backend client
+#     req_rewriter_name: example-rewriter
+
+#     # tracing_name selects the distributed tracing configuration (crafted below) to be used with this backend. default is default
+#     tracing_name: default
+
+#     # dearticulate_upstream_ranges, when true, instructs Trickster to make multiple parallel requests to the backend for each
+#     # range needed to fulfill the client request, rather than making a multipart range request. default is false
+#     # This setting applies only to object request byte ranges and not time series requests (they are always dearticulated)
+#     dearticulate_upstream_ranges: false
+
+#     # multipart_ranges_disabled, when true, instructs Trickster to return the full object when the client provides
+#     # a multipart range request. This setting applies only to object request byte ranges and not time series requests.
+#     # The default is false.
+#     multipart_ranges_disabled: false
+
+#     # compressable_types defines the Content Types that will be compressed when stored in the Trickster cache
+#     # reasonable defaults are set, so use this with care. To disable compression, set compressable_types: []
+#     # Default list is provided here:
+#     compressable_types:
+#     - text/javascript, text/css, text/plain, text/xml, text/json, application/json, application/javascript, application/xml ]
+
+#     # timeout_ms defines how long Trickster will wait before aborting and upstream http request. Default: 180s
+#     timeout_ms: 180000
+
+#     # keep_alive_timeout_ms defines how long Trickster will wait before closing a keep-alive connection due to inactivity
+#     # if the origins keep-alive timeout is shorter than Tricksters, the connect will be closed sooner. Default: 300
+#     keep_alive_timeout_ms: 300000
+
+#     # max_idle_conns set the maximum concurrent keep-alive connections Trickster may have opened to this backend
+#     # additional requests will be queued. Default: 20
+#     max_idle_conns: 20
+
+#     # max_ttl_ms defines the maximum allowed TTL for any object cached for this backend. default is 86400
+#     max_ttl_ms: 86400000
+
+#     # revalidation_factor is the multiplier for object lifetime expiration to determine cache object TTL; default is 2
+#     # for example, if a revalidatable object has Cache-Control: max-age=300, we will cache for 10 minutes (300s * 2)
+#     # so there is an opportunity to revalidate
+#     revalidation_factor: 2.0
+
+#     # max_object_size_bytes defines the largest byte size an object may be before it is uncacheable due to size. default is 524288 (512k)
+#     max_object_size_bytes: 524288
+
+#     # These next 7 settings only apply to Time Series backends
+
+#     # backfill_tolerance_ms prevents new datapoints that fall within the tolerance window (relative to time.Now) from being permanently
+#     # cached. Think of it as "the newest N milliseconds of real-time data are preliminary and subject to updates, so refresh them periodically"
+#     # default is 0
+#     backfill_tolerance_ms: 0
+
+#     # backfill_tolerance_points works like the _ms version, except the methodology is based on # of intervaled timestamps (points) in the series
+#     # instead of a relative time. You can set both values and the one impacting the most number of elements in the time series takes precedence
+#     backfill_tolerance_points: 0
+
+#     # timeseries_retention_factor defines the maximum number of recent timestamps to cache for a given query. Default is 1024
+#     timeseries_retention_factor: 1024
+
+#     # timeseries_ttl_ms defines the relative expiration of cached timeseries. default is 6 hours (21600 seconds)
+#     timeseries_ttl_ms: 21600000
+
+#     # timeseries_eviction_method selects the metholodogy used to determine which timestamps are removed once
+#     # the timeseries_retention_factor limit is reached. options are oldest and lru. Default is oldest
+#     timeseries_eviction_method: oldest
+
+#     # fast_forward_disable, when set to true, will turn off the fast forward feature for any requests proxied to this backend
+#     fast_forward_disable: false
+
+#     # fastforward_ttl_ms defines the relative expiration of cached fast forward data. default is 15s
+#     fastforward_ttl_ms: 15000
+
+#     # shard_max_size_points defines the maximum size of a timeseries request in unique timestamps,
+#     # before sharding into multiple requests of this denomination and reconsitituting the results.
+#     # If shard_max_size_points and shard_max_size_ms are both > 0, the configuration is invalid.
+#     # default is 0
+#     shard_max_size_points: 0
+
+#     # shard_max_size_ms defines the max size of a timeseries request in milliseconds,
+#     # before sharding into multiple requests of this denomination and reconsitituting the results.
+#     # If shard_max_size_ms and shard_max_size_points are both > 0, the configuration is invalid.
+#     # default is 0
+#     shard_max_size_ms: 0
+
+#     # shard_step_ms defines the epoch-aligned cadence to use when creating shards. When set to 0,
+#     # shards are not aligned to the epoch at a specific step. shard_max_size_ms must be perfectly
+#     # divisible by shard_step_ms when both are > 0, or the configuration is invalid.
+#     # default is 0
+#     shard_step_ms: 0
+
+#     #
+#     # Each backend provider implements their own defaults for health checking
+#     # which can be overridden per backend configuration. See /docs/health.md for more information
+#     healthcheck:
+
+#       ## Crafting a Heatlh Check
+
+#       # verb is the HTTP Method Trickster will when performing an upstream health check for this backend
+#       # default is GET for all backend types unless overridden per-backend here.
+#       verb: GET
+
+#       # scheme is either http or https
+#       # default is http
+#       scheme: https
+
+#       # host defines a custom Host header to include in health check requests
+#       # default is the hostname in the backend configuration's origin_url
+#       host: alternate-host.example.com
+
+#       # port defines a custom port to include in health check requests
+#       # default is 80 or 443 depending upon scheme
+#       port: 8080
+
+#       # path is the URL Trickster will request against this backend to
+#       # when a health check request is received by Trickster via http://<trickster-endpoint>/trickster/<backend_name>/health
+#       # this is the default value for prometheus:
+#       path: /api/v1/query
+
+#       # query is the query string Trickster will append the when performing an upstream health check for this backend
+#       # This example value is the default for prometheus (again, see /docs/health.md)
+#       query: query=up
+
+#       # headers provides a list of HTTP Headers to add to Health Check HTTP Requests to this backend
+#       # default is none
+#       headers:
+#         Authorization: Basic SomeHash
+
+#       # body provides a body to use with the health check request when the method is POST or PUT
+#       # default is empty string, and is ignored for non-Body-based methods
+#       body: "my health check request body"
+
+#       ## Crafting a Healthy Response Profile
+
+#       # timeout_ms is the maximum during the health checker will wait for a response before aborting the check
+#       # default is 3s
+#       timeout_ms: 3000
+
+#       # expected_codes is the list of acceptable HTTP response codes when health checking the backend
+#       # for considering the backend healthy
+#       # default is [ 200 ]
+#       expected_codes: [ 200, 204, 206, 301, 302, 304 ]
+
+#       # expected_headers is the list of required HTTP response headers when health checking the backend
+#       # for considering the backend healthy
+#       # default is empty set
+#       expected_headers:
+#         X-Health-Check-Status: success
+
+#       # expected_body is the response body string a health check response must provide
+#       # for considering the backend healthy
+#       # default is not checked
+#       expected_body: "health check pass."
+
+#     # the paths section customizes the behavior of Trickster for specific paths for this Backend. See /docs/paths.md for more info.
+#     paths:
+#       example1:
+#         path: /api/v1/admin/
+#         methods: [ '*' ]                                 # HTTP methods to be routed with this path config. * for all methods.
+#         match_type: prefix                             # match $path* (using exact will match just $path)
+#         handler: localresponse                         # dont actually proxy this request, respond immediately
+#         response_code: 401
+#         response_body: 'No soup for you!'
+#         no_metrics: true                                 # do not record metrics for requests to this path
+#         response_headers:
+#           Cache-Control: no-cache                  # attach these headers to the response down to the client
+#           Content-Type: text/plain
+#         example2:
+#           path: /example/
+#           methods: [ GET, POST ]
+#           collapsed_forwarding: progressive    # see /docs/collapsed_forwarding.md
+#           match_type: prefix                   # this path is routed using prefix matching
+#           handler: proxycache                  # this path is routed through the cache
+#           req_rewriter_name: example-rewriter  # name of a rewriter to modify the request prior to handling
+#           cache_key_params: [ ex_param1, ex_param2 ]       # the cache key will be hashed with these query parameters (GET)
+#           cache_key_form_fields: [ ex_param1, ex_param2 ]  # or these form fields (POST)
+#           cache_key_headers: [ X-Example-Header ]            # and these request headers, when present in the incoming request
+#           request_headers:
+#             Authorization: custom proxy client auth header
+#             -Cookie: ''                                # attach these request headers when proxying. the + in the header name
+#             +Accept-Encoding: gzip                   # means append the value if the header exists, rather than replace
+#                                                                 # while the - will remove the header
+#           request_params:
+#             +authToken: SomeTokenHere                 # manipulate request query parameters in the same way
+
+#         # the tls section configures the frontend and backend TLS operation for the backend
+#     tls:
+#         # TLS Frontend Configs
+#         # You can configure which certificate and key to use when this endpoint serves downstream clients over TLS
+#         # Trickster will fail out at startup if the provided files do not exist, are unreadable, or in an invalid format
+#         # These settings by default are '' (empty string), which disables this backend from being routed over the TLS port
+#         full_chain_cert_path: /path/to/your/cert.pem
+#         private_key_path: /path/to/your/key.pem
+
+#         # TLS Backend Configs
+#         # These settings configure how Trickster will behave as a client when communicating with
+#         # this backend over TLS
+
+#         # if insecure_skip_verify is true, Trickster will trust the origins certificate without any verification
+#         # default is false
+#         insecure_skip_verify: false
+
+#         # certificate_authority_paths provides a list of additional certificate authorities to be used to trust an upstream origin
+#         # in addition to Operating System CAs.  default is an empty list, which insructs the Trickster to use only the OS List
+#         certificate_authority_paths: [ ../../testdata/test.rootca.pem ]
+
+#         # client_cert_path provides the path to a client certificate for Trickster to use when authenticating with an upstream server
+#         # empty string '' by default
+#         client_cert_path: /path/to/my/client/cert.pem
+
+#         # client_key_path provides the path to a client key for Trickster to use when authenticating with an upstream server
+#         # empty string '' by default
+#         client_key_path: /path/to/my/client/key.pem
+
+#   # For multi-backend support, backends are named, and the name is the second word of the configuration section name.
+#   # In this example, backends are named foo-01.example.com and foo-02.example.com.
+#   # Clients can indicate this backend in their path (http://trickster.example.com:8480/foo/api/v1/query_range?.....)
+#   # unless path_routing_disabled: true
+#   # there are other ways for clients to indicate which backend to use in a multi-backend setup. See the documentation for more information
+
+#   foo-01.example.com:
+#     is_default: false
+#     provider: reverseproxy
+#     origin_url: http://foo-origin-01
+#     healthcheck:
+#       interval_ms: 1000
+
+#   foo-02.example.com:
+#     is_default: false
+#     provider: reverseproxy
+#     origin_url: http://foo-origin-02
+#     healthcheck:
+#       interval_ms: 1000
+
+# # Application Load Balancer Backend configuration options, see /docs/alb.md for more information
+#
+#   alb01:
+#     hosts: [ foo.example.com ]
+#     path_routing_disabled: true # only route to the alb via the foo.example.com Host header
+#     provider: alb
+#     alb:
+#       # mechanism defines the ALB pool member selection mechanism.
+#       # values are rr, fr, fgr, nlm, or tsm. see the docs for detailed descriptions of each
+#       mechanism: rr # use a basic round robin
+
+#       # pool defines the pool of backends to which the alb routes
+#       # use the two example backends above
+#       pool: [ foo-01.example.com, foo-02.example.com ]
+
+#       # healthy_floor is the minimum health status for a Backend to be considered healthy in the pool
+#       #  1 indicates only backends positively reporting as healthy are included
+#       #  0 indicates backends in either a unknown/unchecked state or healthy reporting state
+#       # -1 includes all backends, regardless of reporting state
+#       # default is 0
+#       healthy_floor: 0
+{% endif %}

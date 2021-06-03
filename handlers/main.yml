@@ -1,7 +1,17 @@
 ---
 
+- name: daemon-reload
+  systemd:
+    daemon_reload: true
+    force: true
+  notify: restart trickster
+  when:
+    - ansible_service_mgr == 'systemd'
+
 - name: restart trickster
   systemd:
     name: trickster
     state: restarted
   when: trickster_service_state != 'stopped'
+
+...

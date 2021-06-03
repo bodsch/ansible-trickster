@@ -1,0 +1,31 @@
+---
+
+- name: create local tmp directory
+  become: false
+  delegate_to: 127.0.0.1
+  file:
+    path: "{{ trickster_local_tmp_directory }}"
+    state: directory
+    mode: 0750
+
+- name: Create trickster group
+  group:
+    name: "{{ trickster_system_group }}"
+    state: present
+    system: true
+  when:
+    - trickster_system_group != "root"
+
+- name: Create trickster user
+  user:
+    name: "{{ trickster_system_user }}"
+    groups: "{{ trickster_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: /nonexistent
+  when:
+    - trickster_system_user != "root"
+
+...

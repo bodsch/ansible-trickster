@@ -1,0 +1,24 @@
+# -*- mode: conf -*-
+
+[Unit]
+Description=Dashboard Accelerator for Prometheus and HTTP Reverse Proxy Cache
+Documentation=https://github.com/trickstercache/trickster
+After=network.target
+
+[Service]
+EnvironmentFile={{ sysconfig_directory }}/trickster
+# User=trickster
+ExecStartPre=/bin/bash -l -c 'env >/tmp/trickster.err'
+ExecStartPre={{ trickster_bin }} \
+  --config ${TRICKSTER_CONFIG} \
+  --log-level ${TRICKSTER_LOG_LEVEL} \
+  --validate-config
+ExecStart={{ trickster_bin }} \
+  --config ${TRICKSTER_CONFIG} \
+  --log-level ${TRICKSTER_LOG_LEVEL}
+
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

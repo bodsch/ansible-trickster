@@ -6,4 +6,31 @@ go_arch_map:
   armv7l: 'armv7'
   armv6l: 'armv6'
 
-go_arch: "{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+go_arch: "{{
+  go_arch_map[ansible_architecture] |
+  default(ansible_architecture) }}"
+
+_systemd_lib_directory:
+  default: /lib/systemd/system
+  debian: /lib/systemd/system
+  redhat: /usr/lib/systemd/system
+
+systemd_lib_directory: "{{
+          _systemd_lib_directory[ansible_os_family | lower] |
+  default(_systemd_lib_directory['default']) }}"
+
+_trickster_dependencies: {}
+#  - unzip
+#  - libselinux-python
+#  - policycoreutils-python
+
+_sysconfig_directory:
+  default: "/etc/default"
+  debian: "/etc/default"
+  redhat: "/etc/sysconfig"
+
+sysconfig_directory: "{{
+          _sysconfig_directory[ansible_os_family | lower] |
+  default(_sysconfig_directory['default']) }}"
+
+trickster_local_tmp_directory: "/tmp/trickster/{{ trickster_version }}"

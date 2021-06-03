@@ -1,0 +1,34 @@
+{% if trickster_main is defined %}
+main:
+{% set b = trickster_main %}
+{{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
+{% else %}
+# main:
+#   # instance_id allows you to run multiple Trickster processes on the same host and log to separate files
+#   # Useful for baremetal, not so much for elastic deployments, so only uncomment if you really need it
+#   # default is 0, which means ignored
+#   instance_id: 0
+
+#   # config_handler_path provides the HTTP path to view a read-only printout of the running configuration
+#   # which can be reached at http://your-trickster-endpoint:port/$config_handler_path
+#   # default is /trickster/config
+#   config_handler_path: /trickster/config
+
+#   # ping_handler_path provides the HTTP path you will use to perform an uptime health check against Trickster
+#   # which can be reached at http://your-trickster-endpoint:port/$ping_handler_path
+#   # default is /trickster/ping
+#   ping_handler_path: /trickster/ping
+
+#   # health_handler_path provides the HTTP path prefix you will use to perform an uptime health check against
+#   # configured Trickster backends via http://trickster/$health_handler_path/$backend_name
+#   # default is /trickster/health. Set to empty string to fully disable upstream health checking
+#   health_handler_path: /trickster/health
+
+#   # pprof_server provides the name of the http listener that will host the pprof debugging routes
+#   # Options are: "metrics", "reload", "both", or "off"; default is both
+#   pprof_server: both
+
+#   # server_name provides the name of this server instance, used to self-identfy in Via and other Forwarding headers
+#   # server_name defaults to os.Hostname() when left blank
+#   server_name: ''
+{% endif %}

@@ -1,21 +1,15 @@
 ---
 
-- name: Gather variables for each operating system
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution_file_variety | lower }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
+- import_tasks: prepare.yml
   tags:
     - trickster_install
     - trickster_configure
     - trickster_run
 
-- import_tasks: preflight.yml
+- import_tasks: download.yml
+  become: true
   tags:
     - trickster_install
-    - trickster_configure
-    - trickster_run
 
 - import_tasks: install.yml
   become: true
@@ -27,12 +21,10 @@
   tags:
     - trickster_configure
 
-- name: Ensure trickster is enabled on boot
+- import_tasks: service.yml
   become: true
-  systemd:
-    daemon_reload: true
-    name: trickster
-    enabled: true
-    state: started
   tags:
     - trickster_run
+    - trickster_configure
+
+...

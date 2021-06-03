@@ -1,0 +1,13 @@
+---
+
+- name: prometheus
+  src: https://github.com/cloudalchemy/ansible-prometheus.git
+  scm: git
+  version: 4.0.0
+
+- name: redis
+  src: https://github.com/geerlingguy/ansible-role-redis.git
+  scm: git
+  version: 1.7.0
+
+...

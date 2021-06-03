@@ -1,0 +1,25 @@
+# # Configuration Options for Config Reloading
+{% if trickster_reloading is defined and trickster_reloading | count > 0 %}
+reloading:
+{% set b = trickster_reloading %}
+{{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
+{% else %}
+# reloading:
+#   # listen_port defines the port where Tricksters config reload server listens
+#   # 8484 is the default
+#   listen_port: 8484
+#   # listen_address defines the ip where Tricksters config reload server listens
+#   # empty by default, listening on all interfaces
+#   listen_address: ''
+#   # handler_path defines the HTTP path where the Reload interface is available.
+#   # by default, this is /trickster/config/reload
+#   handler_path: /trickster/config/reload
+#   # drain_timeout_ms defines how long old HTTP listeners will live to allow
+#   # outstanding connection to close organically, before the listener is forcefully closed
+#   # the default is 30
+#   drain_timeout_ms: 30000
+#   # rate_limit_ms specifies the rate limit timeout duration to apply to the HTTP reload interface.
+#   # The reload interface is disabled for this duration of time whenever a config reload request is
+#   # made that fails because the underlying config file is unmodified. default is 3
+#   rate_limit_ms: 3000
+{% endif %}
