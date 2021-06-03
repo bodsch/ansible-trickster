@@ -1,28 +1,5 @@
 ---
 
-- name: Assert usage of systemd as an init system
-  assert:
-    that: ansible_service_mgr == 'systemd'
-    msg: "This role only works with systemd"
-
-- name: Get systemd version
-  command: systemctl --version
-  changed_when: false
-  check_mode: false
-  register: __systemd_version
-  tags:
-    - skip_ansible_lint
-
-- name: Set systemd version fact
-  set_fact:
-    trickster_systemd_version: "{{ __systemd_version.stdout_lines[0].split(' ')[-1] }}"
-
-- debug:
-    var: "{{ item }}"
-  when: item is defined
-  loop:
-    - trickster_systemd_version
-
 - name: create local tmp directory
   become: false
   delegate_to: 127.0.0.1
@@ -36,7 +13,8 @@
     name: "{{ trickster_system_group }}"
     state: present
     system: true
-  when: trickster_system_group != "root"
+  when:
+    - trickster_system_group != "root"
 
 - name: Create trickster user
   user:
@@ -46,5 +24,8 @@
     shell: /usr/sbin/nologin
     system: true
     createhome: false
-    home: /
-  when: trickster_system_user != "root"
+    home: /nonexistent
+  when:
+    - trickster_system_user != "root"
+
+...

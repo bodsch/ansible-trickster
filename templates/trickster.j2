@@ -20,9 +20,11 @@
 #   -version
 #         Prints the Trickster version
 
-
-TRICKSTER_OPTS=
-TRICKSTER_OPTS="${TRICKSTER_OPTS} --config {{ trickster_config_file }}"
-TRICKSTER_OPTS="${TRICKSTER_OPTS} --origin-url {{ trickster_origin_url }}"
-# TRICKSTER_OPTS="${TRICKSTER_OPTS} -origin-type {{ trickster_origin_type }}"
-# TRICKSTER_OPTS="${TRICKSTER_OPTS} -log-level {{ trickster_log_level }}"
+TRICKSTER_CONFIG="{{ trickster_service_config.config_file }}"
+{% if trickster_service_config.origin_url is defined and trickster_service_config.origin_url | length > 0 %}
+TRICKSTER_ORIGIN_URL="{{ trickster_service_config.origin_url }}"
+{% endif %}
+{% if trickster_service_config.origin_type is defined and trickster_service_config.origin_type | length > 0 %}
+TRICKSTER_ORIGIN_TYPE="{{ trickster_service_config.origin_type }}"
+{% endif %}
+TRICKSTER_LOG_LEVEL="{{ trickster_service_config.log_level }}"

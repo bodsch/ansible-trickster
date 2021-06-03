@@ -1,7 +1,5 @@
 
-# Trickster Ansible role
-
-Trickster ist an Open Source Dashboard Accelerator for Time Series Databases.
+[Trickster](https://github.com/tricksterproxy/trickster) ist an Open Source Dashboard Accelerator for Time Series Databases.
 
 This ansible role installs and configure Trickster.
 
@@ -9,9 +7,13 @@ This ansible role installs and configure Trickster.
 
 Look to the [defaults](defaults/main.yml) properties file to see the possible configuration properties.
 
+## Configuration example from upstream
+
+https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml
+
 ## Local Testing
 
-The preferred way of locally testing the role is to use Docker and [molecule](https://github.com/metacloud/molecule) (v2.x). 
+The preferred way of locally testing the role is to use Docker and [molecule](https://github.com/metacloud/molecule) (v2.x).
 You will have to install Docker on your system. See "Get started" for a Docker package suitable to for your system.
 
 We are using tox to simplify process of testing on multiple ansible versions. To install tox execute:
