@@ -20,7 +20,8 @@ def base_directory():
         molecule_directory = "."
     else:
         directory = "."
-        molecule_directory = "molecule/{}".format(os.environ.get('MOLECULE_SCENARIO_NAME'))
+        molecule_directory = "molecule/{}".format(
+            os.environ.get('MOLECULE_SCENARIO_NAME'))
 
     return directory, molecule_directory
 
@@ -32,13 +33,18 @@ def get_vars(host):
     """
     base_dir, molecule_dir = base_directory()
 
-    file_defaults = "file={}/defaults/main.yml name=role_defaults".format(base_dir)
+    file_defaults = "file={}/defaults/main.yml name=role_defaults".format(
+        base_dir)
     file_vars = "file={}/vars/main.yml name=role_vars".format(base_dir)
-    file_molecule = "file={}/group_vars/all/vars.yml name=test_vars".format(molecule_dir)
+    file_molecule = "file={}/group_vars/all/vars.yml name=test_vars".format(
+        molecule_dir)
 
-    defaults_vars = host.ansible("include_vars", file_defaults).get("ansible_facts").get("role_defaults")
-    vars_vars = host.ansible("include_vars", file_vars).get("ansible_facts").get("role_vars")
-    molecule_vars = host.ansible("include_vars", file_molecule).get("ansible_facts").get("test_vars")
+    defaults_vars = host.ansible("include_vars", file_defaults).get(
+        "ansible_facts").get("role_defaults")
+    vars_vars = host.ansible("include_vars", file_vars).get(
+        "ansible_facts").get("role_vars")
+    molecule_vars = host.ansible("include_vars", file_molecule).get(
+        "ansible_facts").get("test_vars")
 
     ansible_vars = defaults_vars
     ansible_vars.update(vars_vars)
