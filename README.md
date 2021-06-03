@@ -7,38 +7,205 @@ This ansible role installs and configure Trickster.
 
 Look to the [defaults](defaults/main.yml) properties file to see the possible configuration properties.
 
-## Configuration example from upstream
+You can also look at the [molecule](molecule/default/group_vars/all) test.
+
+### Operating systems
+
+Tested on
+
+* Debian 10
+* Ubuntu 18.04 / 20.04
+
+## Contribution
+
+Please read [Contribution](CONTRIBUTING.md)
+
+## Development,  Branches (Git Tags)
+
+The `master` Branch is my *Working Horse* includes the "latest, hot shit" and can be complete broken!
+
+If you want to use something stable, please use a [Tagged Version](https://github.com/bodsch/ansible-trickster/tags)!
+
+## Configuration
+
+### main
+
+```
+trickster_main:
+  # default is 0, which means ignored
+  instance_id: 0
+  # default is /trickster/config
+  config_handler_path: /trickster/config
+  # default is /trickster/ping
+  ping_handler_path: /trickster/ping
+  # default is /trickster/health
+  health_handler_path: /trickster/health
+  # Options are: "metrics", "reload", "both", or "off"; default is both
+  pprof_server: both
+  # server_name defaults to os.Hostname() when left blank
+  server_name: ''
+```
+
+### frontend
+
+```
+trickster_frontend:
+  # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
+  listen_port: 8480
+  # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
+  # empty by default, listening on all interfaces
+  listen_address: ''
+  # tls_listen_address defines the ip on which Tricksters Front-end TLS Proxy server listens.
+  # empty by default, listening on all interfaces
+  tls_listen_address: ''
+  # tls_listen_port defines the port on which Tricksters Front-end TLS Proxy server listens.
+  # The default is 0, which means TLS is not used, even if certificates are configured below.
+  tls_listen_port: 0
+  # connections_limit defines the maximum number of concurrent connections
+  # Tricksters Proxy server may handle at any time.
+  # 0 by default, unlimited.
+  connections_limit: 0
+```
+
+### caches
+
+[upstream](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml#L68-L190)
+
+`provider` defines what kind of cache should be use.
+
+options are `bbolt`, `badger`, `filesystem`, `memory` and `redis`
+
+#### in-memory
+
+```
+trickster_caches:
+  default:
+    provider: memory
+```
+
+#### redis
+
+```
+trickster_caches:
+  default:
+    provider: redis
+    redis:
+      endpoint: 'redis:6379'
+      endpoints:
+        - redis:6379
+      protocol: tcp
+      db: 0
+```
+
+#### filesystem
+
+```
+trickster_caches:
+  default:
+    provider: filesystem
+    filesystem:
+      cache_path: /var/cache/trickster
+```
+
+#### bbolt
+
+```
+trickster_caches:
+  default:
+    provider: bbolt
+    filename: trickster.db
+    bucket: trickster
+```
+
+#### badger
+
+```
+trickster_caches:
+  default:
+    provider: badger
+    directory: /tmp/trickster
+    value_directory: /tmp/trickster
+```
+
+
+### backends
+
+[upstream](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml#L216-L524)
+
+```
+trickster_backends:
+  default:
+    provider: prometheus
+    is_default: true
+    origin_url: http://prometheus:9090
+```
+
+
+### rules
+
+```
+
+
+```
+
+
+### request_rewriters
+
+```
+
+
+```
+
+
+### tracing
+
+```
+
+
+```
+
+
+### metrics
+
+```
+trickster_metrics:
+  listen_port: 8481
+  listen_address: 127.0.0.1
+```
+
+
+### reloading
+
+```
+
+
+```
+
+
+### logging
+
+```
+trickster_logging:
+  # Possible values are 'debug', 'info', 'warn', 'error'
+  log_level: warn
+  log_file: /var/log/trickster.log
+```
+
+### example from upstream
 
 https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml
 
+
+
 ## Local Testing
 
-The preferred way of locally testing the role is to use Docker and [molecule](https://github.com/metacloud/molecule) (v2.x).
-You will have to install Docker on your system. See "Get started" for a Docker package suitable to for your system.
-
-We are using tox to simplify process of testing on multiple ansible versions. To install tox execute:
+To run a standard molecule environment with only default test scenario:
 ```sh
-pip install tox
+tox -e py29-ansible29 -- molecule test
 ```
-To run tests on all ansible versions (WARNING: this can take some time)
-```sh
-tox
-```
-To run a custom molecule command on custom environment with only default test scenario:
-```sh
-tox -e py27-ansible25 -- molecule test -s default
-```
-For more information about molecule go to their [docs](http://molecule.readthedocs.io/en/latest/).
-
-If you would like to run tests on remote docker host just specify `DOCKER_HOST` variable before running tox tests.
-
-
-## Contributing
-
-See [contributor guideline](CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under MIT License. See [LICENSE](/LICENSE) for more details.
+This project is licensed under Apache License. See [LICENSE](/LICENSE) for more details.
 
 

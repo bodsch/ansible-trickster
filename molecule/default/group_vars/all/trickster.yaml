@@ -1,0 +1,18 @@
+---
+
+trickster_backends:
+  default:
+    provider: prometheus
+    is_default: true
+    origin_url: http://prometheus:9090
+
+trickster_caches:
+  default:
+    provider: redis
+    redis:
+      endpoint: 'redis:6379'
+      endpoints:
+        - redis:6379
+      protocol: tcp
+      db: 0
+...

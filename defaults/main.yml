@@ -1,10 +1,6 @@
 ---
 trickster_release_download_url: https://github.com/tricksterproxy/trickster/releases
 
-
-# https://github.com/trickstercache/trickster/releases/download/v1.1.5/trickster-1.1.5.tar.gz
-# https://github.com/trickstercache/trickster/releases/download/v2.0.0-beta2/trickster-2.0.0-beta2.tar.gz
-
 trickster_version: '2.0.0-beta2'
 
 trickster_system_user: trickster
@@ -16,9 +12,11 @@ trickster_service_state: started
 
 trickster_service_config:
   config_file: /etc/trickster.yml
-  origin_url: '' # http://prometheus:9090
-  origin_type: '' # prometheus
-  log_level: debug
+  # e.g. http://prometheus:9090
+  origin_url: ''
+  # prometheus or influxdb
+  origin_type: ''
+  log_level: info
 
 trickster_main:
   # default is 0, which means ignored
@@ -35,7 +33,7 @@ trickster_main:
   server_name: ''
 
 trickster_frontend:
-  # # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
+  # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
   listen_port: 8480
   # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
   # empty by default, listening on all interfaces
@@ -51,29 +49,9 @@ trickster_frontend:
   # 0 by default, unlimited.
   connections_limit: 0
 
-trickster_caches:
-  default:
-    provider: memory
-    # redis:
-    #   endpoint: 'redis:6379'
-    #   endpoints:
-    #     - redis:6379
-    #   protocol: tcp
-    #   db: 0
-    filesystem:
-      cache_path: /tmp/trickster
-    # bbolt:
-    #   filename: trickster.db
-    #   bucket: trickster
-    # badger:
-    #   directory: /tmp/trickster
+trickster_caches: {}
 
-trickster_backends:
-  default:
-    provider: prometheus
-    is_default: true
-    # origin_type: prometheus
-    origin_url: http://prometheus:9090
+trickster_backends: {}
 
 trickster_rules: {}
 
