@@ -1,4 +1,7 @@
 
+# Ansible Role:  `trickster`
+
+
 [Trickster](https://github.com/tricksterproxy/trickster) ist an Open Source Dashboard Accelerator for Time Series Databases.
 
 This ansible role installs and configure Trickster.
@@ -30,7 +33,7 @@ If you want to use something stable, please use a [Tagged Version](https://githu
 
 ### main
 
-```
+```yaml
 trickster_main:
   # default is 0, which means ignored
   instance_id: 0
@@ -48,7 +51,7 @@ trickster_main:
 
 ### frontend
 
-```
+```yaml
 trickster_frontend:
   # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
   listen_port: 8480
@@ -77,7 +80,7 @@ options are `bbolt`, `badger`, `filesystem`, `memory` and `redis`
 
 #### in-memory
 
-```
+```yaml
 trickster_caches:
   default:
     provider: memory
@@ -85,7 +88,7 @@ trickster_caches:
 
 #### redis
 
-```
+```yaml
 trickster_caches:
   default:
     provider: redis
@@ -99,7 +102,7 @@ trickster_caches:
 
 #### filesystem
 
-```
+```yaml
 trickster_caches:
   default:
     provider: filesystem
@@ -109,7 +112,7 @@ trickster_caches:
 
 #### bbolt
 
-```
+```yaml
 trickster_caches:
   default:
     provider: bbolt
@@ -119,7 +122,7 @@ trickster_caches:
 
 #### badger
 
-```
+```yaml
 trickster_caches:
   default:
     provider: badger
@@ -132,7 +135,7 @@ trickster_caches:
 
 [upstream](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml#L216-L524)
 
-```
+```yaml
 trickster_backends:
   default:
     provider: prometheus
@@ -143,7 +146,7 @@ trickster_backends:
 
 ### rules
 
-```
+```yaml
 
 
 ```
@@ -151,7 +154,7 @@ trickster_backends:
 
 ### request_rewriters
 
-```
+```yaml
 
 
 ```
@@ -159,7 +162,7 @@ trickster_backends:
 
 ### tracing
 
-```
+```yaml
 
 
 ```
@@ -167,7 +170,7 @@ trickster_backends:
 
 ### metrics
 
-```
+```yaml
 trickster_metrics:
   listen_port: 8481
   listen_address: 127.0.0.1
@@ -176,7 +179,7 @@ trickster_metrics:
 
 ### reloading
 
-```
+```yaml
 
 
 ```
@@ -184,7 +187,7 @@ trickster_metrics:
 
 ### logging
 
-```
+```yaml
 trickster_logging:
   # Possible values are 'debug', 'info', 'warn', 'error'
   log_level: warn
@@ -193,14 +196,15 @@ trickster_logging:
 
 ### example from upstream
 
-https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml
+[upstream doku](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml)
 
 
 
 ## Local Testing
 
 To run a standard molecule environment with only default test scenario:
-```sh
+
+```bash
 tox -e py29-ansible29 -- molecule test
 ```
 
