@@ -1,30 +1,74 @@
 ---
 
-- name: create local tmp directory
+- name: include OS specific configuration ({{ ansible_distribution }} ({{ ansible_os_family }}) {{ ansible_distribution_major_version }})
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      paths:
+        - "vars"
+      files:
+        # eg. debian-10 / ubuntu-20.04 / centos-8 / oraclelinux-8
+        - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+        # eg. archlinux-systemd / archlinux-openrc
+        - "{{ ansible_distribution | lower }}-{{ ansible_service_mgr | lower }}.yml"
+        # eg. debian / ubuntu / centos / oraclelinux
+        - "{{ ansible_distribution | lower }}.yml"
+        # eg. redhat / debian / archlinux
+        - "{{ ansible_os_family | lower }}.yml"
+        - default.yaml
+      skip: true
+
+- name: update package cache
+  package:
+    update_cache: true
+
+- name: define delegate instance for download handling
+  set_fact:
+    trickster_delegate_to: "{{ ansible_host }}"
+    trickster_local_tmp_directory: "{{
+        lookup('env', 'CUSTOM_LOCAL_TMP_DIRECTORY') |
+        default('/var/cache/ansible/trickster', true) }}/{{ trickster_version }}"
+  when:
+    - trickster_direct_download
+
+- name: install dependency
+  package:
+    name: "{{ trickster_dependencies }}"
+    state: present
+  when:
+    - trickster_dependencies is defined
+    - trickster_dependencies | count > 0
+
+- name: detect installed trickster binary
+  stat:
+    path: "{{ trickster_install_path }}/trickster"
+  register: stat_trickster_binary
+
+- name: create download directory
   become: false
-  delegate_to: 127.0.0.1
+  delegate_to: "{{ trickster_delegate_to }}"
   file:
     path: "{{ trickster_local_tmp_directory }}"
     state: directory
     mode: 0750
 
-- name: Create trickster group
-  group:
-    name: "{{ trickster_system_group }}"
-    state: present
-    system: true
-  when:
-    - trickster_system_group != "root"
+- name: user and group handling
+  block:
+    - name: create trickster group
+      group:
+        name: "{{ trickster_system_group }}"
+        state: present
+        system: true
 
-- name: Create trickster user
-  user:
-    name: "{{ trickster_system_user }}"
-    groups: "{{ trickster_system_group }}"
-    append: true
-    shell: /usr/sbin/nologin
-    system: true
-    createhome: false
-    home: /nonexistent
+    - name: create trickster user
+      user:
+        name: "{{ trickster_system_user }}"
+        groups: "{{ trickster_system_group }}"
+        append: true
+        shell: /usr/sbin/nologin
+        system: true
+        createhome: false
+        home: /nonexistent
   when:
     - trickster_system_user != "root"
 

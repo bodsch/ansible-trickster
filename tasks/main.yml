@@ -8,6 +8,8 @@
 
 - import_tasks: download.yml
   become: true
+  when:
+    - not stat_trickster_binary.stat.exists
   tags:
     - trickster_install
 

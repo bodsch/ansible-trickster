@@ -1,6 +1,6 @@
 ---
 
-- name: create the Trickster systemd service file
+- name: create the trickster systemd service file
   template:
     src: systemd/trickster.service.j2
     dest: "{{ systemd_lib_directory }}/trickster.service"
@@ -10,13 +10,13 @@
   notify:
     - daemon-reload
 
-- name: create Trickster config
+- name: create trickster config
   template:
     src: trickster.j2
     dest: "{{ sysconfig_directory }}/trickster"
     mode: 0644
 
-- name: create Trickster config for systemd unit file
+- name: create trickster config for systemd unit file
   template:
     src: trickster.conf.j2
     dest: "{{ trickster_service_config.config_file }}"

@@ -16,8 +16,15 @@ You can also look at the [molecule](molecule/default/group_vars/all) test.
 
 Tested on
 
-* Debian 10
-* Ubuntu 18.04 / 20.04
+* ArchLinux
+* ArtixLinux
+* Debian based
+    - Debian 10 / 11
+    - Ubuntu 20.04
+* RedHat based
+    - Alma Linux 8
+    - Rocky Linux 8
+    - OracleLinux 8
 
 ## Contribution
 
