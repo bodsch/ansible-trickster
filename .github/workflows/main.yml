@@ -53,7 +53,7 @@ jobs:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'ansible-screen'
+          path: 'ansible-trickster'
 
       - name: set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -96,7 +96,7 @@ jobs:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'ansible-screen'
+          path: 'ansible-trickster'
 
       - name: set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
