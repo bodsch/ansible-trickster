@@ -1,9 +1,9 @@
 ---
 
 - name: prometheus
-  src: https://github.com/cloudalchemy/ansible-prometheus.git
+  src: https://github.com/bodsch/ansible-prometheus.git
   scm: git
-  version: 4.0.0
+  version: 1.0.1
 
 - name: redis
   src: https://github.com/bodsch/ansible-redis.git
