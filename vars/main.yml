@@ -12,6 +12,254 @@ trickster_dependencies: []
 
 trickster_defaults_directory: /etc/default
 
+# ------------------------------------------------------------------------------------------------
+
+trickster_defaults_service_config:
+  config_file: /etc/trickster.yml
+  # e.g. http://prometheus:9090
+  origin_url: ''
+  # prometheus or influxdb
+  origin_type: ''
+  log_level: info
+
+trickster_defaults_main:
+  # default is 0, which means ignored
+  instance_id: 0
+  # default is /trickster/config
+  config_handler_path: /trickster/config
+  # default is /trickster/ping
+  ping_handler_path: /trickster/ping
+  # default is /trickster/health
+  health_handler_path: /trickster/health
+  # Options are: "metrics", "reload", "both", or "off"; default is both
+  pprof_server: both
+  # server_name defaults to os.Hostname() when left blank
+  server_name: ''
+
+trickster_defaults_frontend:
+  # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
+  listen_port: 8480
+  # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
+  # empty by default, listening on all interfaces
+  listen_address: '0.0.0.0'
+  # tls_listen_address defines the ip on which Tricksters Front-end TLS Proxy server listens.
+  # empty by default, listening on all interfaces
+  tls_listen_address: ""
+  # tls_listen_port defines the port on which Tricksters Front-end TLS Proxy server listens.
+  # The default is 0, which means TLS is not used, even if certificates are configured below.
+  tls_listen_port: ""
+  # connections_limit defines the maximum number of concurrent connections
+  # Tricksters Proxy server may handle at any time.
+  # 0 by default, unlimited.
+  connections_limit: 0
+
+trickster_defaults_backends: {}
+##  default:
+##    provider: prometheus
+##    # for prometheus backends, you can configure label injection as follows:
+##    # prometheus:
+##    #   labels:
+##    #     labelname: value
+##    origin_url: http://prometheus:9090
+##    is_default: true
+##    hosts: []
+##    cache_name: default
+##    forwarded_headers: standard
+##    cache_key_prefix: example
+##    negative_cache_name: default
+##    path_routing_disabled: false
+##    rule_name: example-rule
+##    req_rewriter_name: example-rewriter
+##    tracing_name: default
+##    dearticulate_upstream_ranges: false
+##    multipart_ranges_disabled: false
+##    compressable_types: []
+##      - text/javascript
+##      - text/css
+##      - text/plain
+##      - text/xml
+##      - text/json
+##      - application/json
+##      - application/javascript
+##      - application/xml
+##    timeout_ms: 180000
+##    keep_alive_timeout_ms: 300000
+##    max_idle_conns: 20
+##    max_ttl_ms: 86400000
+##    revalidation_factor: 2.0
+##    max_object_size_bytes: 524288
+###     # These next 7 settings only apply to Time Series backends
+##    backfill_tolerance_ms: 0
+##    backfill_tolerance_points: 0
+##    timeseries_retention_factor: 1024
+##    timeseries_ttl_ms: 21600000
+##    timeseries_eviction_method: oldest
+##    fast_forward_disable: false
+##    fastforward_ttl_ms: 15000
+##    shard_max_size_points: 0
+##    shard_max_size_ms: 0
+##    shard_step_ms: 0
+##    healthcheck:
+##      verb: GET
+##      scheme: https
+##      host: alternate-host.example.com
+##      port: 8080
+##      path: /api/v1/query
+##      query: query=up
+##      headers:
+##        Authorization: Basic SomeHash
+##      body: "my health check request body"
+##      timeout_ms: 3000
+##      expected_codes: [ 200, 204, 206, 301, 302, 304 ]
+##      expected_headers:
+##        X-Health-Check-Status: success
+##      expected_body: "health check pass."
+##    # the paths section customizes the behavior of Trickster for specific paths for this Backend. See /docs/paths.md for more info.
+##    paths:
+##      example1:
+##        path: /api/v1/admin/
+##        methods: [ '*' ]                                    # HTTP methods to be routed with this path config. * for all methods.
+##        match_type: prefix                                  # match $path* (using exact will match just $path)
+##        handler: localresponse                              # dont actually proxy this request, respond immediately
+##        response_code: 401
+##        response_body: 'No soup for you!'
+##        no_metrics: true                                    # do not record metrics for requests to this path
+##        response_headers:
+##          Cache-Control: no-cache                           # attach these headers to the response down to the client
+##          Content-Type: text/plain
+##        example2:
+##          path: /example/
+##          methods: [ GET, POST ]
+##          collapsed_forwarding: progressive                 # see /docs/collapsed_forwarding.md
+##          match_type: prefix                                # this path is routed using prefix matching
+##          handler: proxycache                               # this path is routed through the cache
+##          req_rewriter_name: example-rewriter               # name of a rewriter to modify the request prior to handling
+##          cache_key_params: [ ex_param1, ex_param2 ]        # the cache key will be hashed with these query parameters (GET)
+##          cache_key_form_fields: [ ex_param1, ex_param2 ]   # or these form fields (POST)
+##          cache_key_headers: [ X-Example-Header ]           # and these request headers, when present in the incoming request
+##          request_headers:
+##            Authorization: custom proxy client auth header
+##            -Cookie: ''                                     # attach these request headers when proxying. the + in the header name
+##            +Accept-Encoding: gzip                          # means append the value if the header exists, rather than replace
+##                                                            # while the - will remove the header
+##          request_params:
+##            +authToken: SomeTokenHere                       # manipulate request query parameters in the same way
+##    # the tls section configures the frontend and backend TLS operation for the backend
+##    tls:
+##        full_chain_cert_path: /path/to/your/cert.pem
+##        private_key_path: /path/to/your/key.pem
+##        insecure_skip_verify: false
+##        certificate_authority_paths: [ ../../testdata/test.rootca.pem ]
+##        client_cert_path: /path/to/my/client/cert.pem
+##        client_key_path: /path/to/my/client/key.pem
+##
+##  foo-01.example.com:
+##    is_default: false
+##    provider: reverseproxy
+##    origin_url: http://foo-origin-01
+##    healthcheck:
+##      interval_ms: 1000
+##
+##  foo-02.example.com:
+##    is_default: false
+##    provider: reverseproxy
+##    origin_url: http://foo-origin-02
+##    healthcheck:
+##      interval_ms: 1000
+##
+##  alb01:
+##    hosts: [ foo.example.com ]
+##    path_routing_disabled: true # only route to the alb via the foo.example.com Host header
+##    provider: alb
+##    alb:
+##      mechanism: rr # use a basic round robin
+##      pool: [ foo-01.example.com, foo-02.example.com ]
+##      healthy_floor: 0
+
+
+trickster_defaults_caches: {}
+#   default:
+#     provider: memory
+#     index:
+#       reap_interval_ms: 3000
+#       flush_interval_ms: 5000
+#       max_size_bytes: 536870912
+#       max_size_backoff_bytes: 16777216
+#       max_size_objects: 0
+#       max_size_backoff_objects: 100
+#     redis:
+#       client_type: standard
+#       ## Supported by Redis (standard) #####################################
+#       endpoint: redis:6379
+#       ## Supported by Redis Cluster and Redis Sentinel #####################
+#       # endpoints:
+#       # - redis:6379
+#       ## Supported by Redis Sentinel #######################################
+#       # sentinel_master: ''
+#       ## Supported by all Redis Client Types ###############################
+#       protocol: tcp
+#       password: ''
+#       db: 0
+#       max_retries: 0
+#       min_retry_backoff_ms: 8
+#       max_retry_backoff_ms: 512
+#       dial_timeout_ms: 5000
+#       read_timeout_ms: 3000
+#       write_timeout_ms: 3000
+#       pool_size: 20
+#       min_idle_conns: 0
+#       max_conn_age_ms: 0
+#       pool_timeout_ms: 4000
+#       idle_timeout_ms: 300000
+#       idle_check_frequency_ms: 60000
+#     filesystem:
+#       cache_path: /tmp/trickster
+#     bbolt:
+#       filename: trickster.db
+#       bucket: trickster
+#     badger:
+#       directory: /tmp/trickster
+#       value_directory: /tmp/trickster
+#   bolt_example:
+#     provider: bbolt
+#     bbolt:
+#       filename: trickster.db
+#       bucket: trickster
+#     index:
+#       reap_interval_ms: 3000
+#       flush_interval_ms: 5000
+#       max_size_bytes: 536870912
+#       size_backoff_bytes: 16777216
+# negative_caches:
+#   # default:
+#   # The default negative cache config, mapped by all backends by default,
+#   # is empty unless you populate it. Update it by adding entries here in the format of:
+#   # "code": ttl_in_ms
+#   general:
+#     "400": 3000
+#     "404": 3000
+#     "500": 3000
+#     "502": 3000
+
+
+trickster_defaults_rules:
+trickster_defaults_request_rewriters:
+trickster_defaults_tracing:
+
+trickster_defaults_metrics:
+  enabled: true
+  listen_port: 8481
+  listen_address: 127.0.0.1
+
+trickster_defaults_reloading:
+
+trickster_defaults_logging:
+  # Possible values are 'debug', 'info', 'warn', 'error'
+  log_level: warn
+  log_file: /var/log/trickster.log
+
+# ------------------------------------------------------------------------------------------------
+
 go_arch_map:
   i386: '386'
   x86_64: 'amd64'

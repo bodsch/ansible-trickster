@@ -1,0 +1,32 @@
+{% if trickster_main is defined %}
+main:
+  {% set b = trickster_main %}
+  {% if b.instance_id is defined and
+        b.instance_id | string | length > 0 %}
+  instance_id: {{ b.instance_id }}
+  {% endif %}
+  {% if b.config_handler_path is defined and
+        b.config_handler_path | string | length > 0 %}
+  config_handler_path: {{ b.config_handler_path }}
+  {% endif %}
+  {% if b.ping_handler_path is defined and
+        b.ping_handler_path | string | length > 0 %}
+  ping_handler_path: {{ b.ping_handler_path }}
+  {% endif %}
+  {% if b.health_handler_path is defined and
+        b.health_handler_path | string | length > 0 %}
+  health_handler_path: {{ b.health_handler_path }}
+  {% endif %}
+  {% if b.pprof_server is defined and
+        b.pprof_server | string | length > 0 %}
+    {% set _pproof_server = "both" %}
+    {% if b.pprof_server in  ["metrics", "reload", "both", "off"] %}
+      {% set _pproof_server = b.pprof_server %}
+    {% endif %}
+  pprof_server: {{ _pproof_server }}
+  {% endif %}
+  {% if b.server_name is defined and
+        b.server_name | string | length > 0 %}
+  server_name: {{ b.server_name }}
+  {% endif %}
+{% endif %}

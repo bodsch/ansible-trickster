@@ -1,12 +1,12 @@
-# # Configuration Options for Request Rewriter Instructions - see /docs/request_rewriters.md for more info
 {% if trickster_request_rewriters is defined and trickster_request_rewriters | count > 0 %}
 request_rewriters:
-{% set b = trickster_request_rewriters %}
+  {% set b = trickster_request_rewriters %}
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
-{% else %}
+{% endif %}
+{#
 # request_rewriters:
 #   example-rewriter: # this example sets an authorization header before calling the origin
 #     instructions: [
 #       [header, set, Authorization, Basic SomeBase64EncodedCredentials],
 #     ]
-{% endif %}
+#}

@@ -13,44 +13,11 @@ trickster_bin: /bin/trickster
 
 trickster_service_state: started
 
-trickster_service_config:
-  config_file: /etc/trickster.yml
-  # e.g. http://prometheus:9090
-  origin_url: ''
-  # prometheus or influxdb
-  origin_type: ''
-  log_level: info
+trickster_service_config: {}
 
-trickster_main:
-  # default is 0, which means ignored
-  instance_id: 0
-  # default is /trickster/config
-  config_handler_path: /trickster/config
-  # default is /trickster/ping
-  ping_handler_path: /trickster/ping
-  # default is /trickster/health
-  health_handler_path: /trickster/health
-  # Options are: "metrics", "reload", "both", or "off"; default is both
-  pprof_server: both
-  # server_name defaults to os.Hostname() when left blank
-  server_name: ''
+trickster_main: {}
 
-trickster_frontend:
-  # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
-  listen_port: 8480
-  # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
-  # empty by default, listening on all interfaces
-  listen_address: ''
-  # tls_listen_address defines the ip on which Tricksters Front-end TLS Proxy server listens.
-  # empty by default, listening on all interfaces
-  tls_listen_address: ''
-  # tls_listen_port defines the port on which Tricksters Front-end TLS Proxy server listens.
-  # The default is 0, which means TLS is not used, even if certificates are configured below.
-  tls_listen_port: 0
-  # connections_limit defines the maximum number of concurrent connections
-  # Tricksters Proxy server may handle at any time.
-  # 0 by default, unlimited.
-  connections_limit: 0
+trickster_frontend: {}
 
 trickster_caches: {}
 
@@ -62,15 +29,10 @@ trickster_request_rewriters: {}
 
 trickster_tracing: {}
 
-trickster_metrics:
-  listen_port: 8481
-  listen_address: 127.0.0.1
+trickster_metrics: {}
 
 trickster_reloading: {}
 
-trickster_logging:
-  # Possible values are 'debug', 'info', 'warn', 'error'
-  log_level: warn
-  log_file: /var/log/trickster.log
+trickster_logging: {}
 
 ...

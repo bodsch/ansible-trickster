@@ -1,9 +1,9 @@
-# # Configuration Options for Request Routing Rules - see /docs/rule.md for more information
 {% if trickster_rules is defined and trickster_rules | count > 0 %}
 rules:
-{% set b = trickster_rules %}
+  {% set b = trickster_rules %}
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
-{% else %}
+{% endif %}
+{#
 # rules:
 # # This example rule will route a request to the reader or writer backend based on the Username header
 #   example:
@@ -32,4 +32,4 @@ rules:
 #         req_rewriter_name: '' # name of a rewriter to process the request if it matches this case
 #                               # case rewrites are executed prior to giving control back to the rule
 #         redirect_url: ''  # provides a URL to redirect the request if it matches this case
-{% endif %}
+#}

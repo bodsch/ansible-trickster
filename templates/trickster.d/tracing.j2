@@ -1,11 +1,10 @@
-# # Configuration Options for Tracing Instrumentation. see /docs/tracing.md for more information
 {% if trickster_tracing is defined and trickster_tracing | count > 0 %}
 tracing:
 {% set b = trickster_tracing %}
-{{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
-{% else %}
+  {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
+{% endif %}
+{#
 # tracing:
-
 #     # This is the default tracing config with its default options, which you can change here.
 #     # you can also add additional tracing configs here. user-defined tracing configs are mapped
 #     # to backends by the tracing_name value in backend configs, which, by default, use default
@@ -73,4 +72,4 @@ tracing:
 #     provider: zipkin
 #     collector_url: https://zipkin.example.com:9411/api/v2/spans
 #     sample_rate: 0.1
-{% endif %}
+#}

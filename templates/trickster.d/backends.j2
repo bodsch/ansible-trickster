@@ -1,10 +1,9 @@
-# Configuration options for mapping Origin(s)
-
 {% if trickster_backends is defined and trickster_backends | count > 0 %}
-{% set b = trickster_backends %}
+  {% set b = trickster_backends %}
 backends:
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
-{% else %}
+{% endif %}
+{#
 backends:
   # example backend named default. default is always created with these settings unless a different backend is defined here.
   # access this backend via http[s]://trickster-fqdn/default/ unless path_routing_disabled is true
@@ -311,4 +310,4 @@ backends:
 #       # -1 includes all backends, regardless of reporting state
 #       # default is 0
 #       healthy_floor: 0
-{% endif %}
+#}

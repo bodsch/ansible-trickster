@@ -1,8 +1,146 @@
 {% if trickster_caches is defined and trickster_caches | count > 0 %}
 caches:
-{% set b = trickster_caches %}
+  {% set b = trickster_caches %}
+  {% for cache, values in b.items() %}
+# {{ cache }}, {{ values }}
+  {{ cache }}:
+    {% if cache == "default" %}
+      {% set _default_cache_provider = "memory" %}
+
+      {% if values.provider is defined and
+            values.provider | string | length > 0 %}
+        {% if values.provider in ["bbolt", "badger", "filesystem", "memory", "redis"] %}
+          {% set _default_cache_provider = values.provider %}
+        {% endif %}
+    provider: {{ _default_cache_provider }}
+      {% endif %}
+      {% if values.index is defined and
+            values.index | type == "dict" and
+            values.index | count > 0 and
+            _default_cache_provider in ["bbolt", "filesystem", "memory"] %}
+    index:
+        {% for k, v in values.index.items() %}
+          {% if v.reap_interval_ms is defined and
+                v.reap_interval_ms | string | length > 0 %}
+      reap_interval_ms: {{ v.reap_interval_ms }}
+          {% endif %}
+          {% if v.flush_interval_ms is defined and
+                v.flush_interval_ms | string | length > 0 %}
+      flush_interval_ms: {{ v.flush_interval_ms }}
+          {% endif %}
+          {% if v.max_size_bytes is defined and
+                v.max_size_bytes | string | length > 0 %}
+      max_size_bytes: {{ v.max_size_bytes }}
+          {% endif %}
+          {% if v.max_size_backoff_bytes is defined and
+                v.max_size_backoff_bytes | string | length > 0 %}
+      max_size_backoff_bytes: {{ v.max_size_backoff_bytes }}
+          {% endif %}
+          {% if v.max_size_objects is defined and
+                v.max_size_objects | string | length > 0 %}
+      max_size_objects: {{ v.max_size_objects }}
+          {% endif %}
+          {% if v.max_size_backoff_objects is defined and
+                v.max_size_backoff_objects | string | length > 0 %}
+      max_size_backoff_objects: {{ v.max_size_backoff_objects }}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if values.redis is defined and
+            values.redis | type == "dict" and
+            values.redis | count > 0 and
+            _default_cache_provider == "redis" %}
+    # {{ values.redis }}
+    redis:
+        {% if values.redis.client_type is defined and
+              values.redis.client_type | default('standard') in ["standard", "cluster", "sentinel"] %}
+      client_type: {{ values.redis.client_type }}
+        {% endif %}
+        {% if values.redis.endpoint is defined and
+              values.redis.endpoint | string | length > 0 %}
+      endpoint: {{ values.redis.endpoint }}
+        {% endif %}
+        {% if values.redis.endpoints is defined and
+              values.redis.endpoints | type == "list" and
+              values.redis.endpoints | count > 0 %}
+      endpoints:
+          {% for e in values.redis.endpoints %}
+          - {{ e }}
+          {% endfor %}
+        {% endif %}
+
+
+      {% endif %}
+{#
+#       # client_type indicates which kind of Redis client to use. Options are: standard, cluster and sentinel
+#       # default is standard
+#       client_type: standard
+
+#       ## Supported by Redis (standard) #####################################
+#       ## These configurations are ignored by Redis Sentinel and Redis Cluster
+#       ##
+#       # endpoint defines the fqdn+port or path to a unix socket file for connecting to redis
+#       # default is redis:6379
+#       endpoint: redis:6379
+
+#       ## Supported by Redis Cluster and Redis Sentinel #####################
+#       ## These conigurations are ignored by Redis (standard)
+#       ##
+#       # endpoints is used for Redis Cluster and Redis Sentinel to define a list of endpoints
+#       # default is [redis:6379]
+#       endpoints:
+#       - redis:6379
+
+#       ## Supported by Redis Sentinel #######################################
+#       ## These conigurations are ignored by Redis (standard) and Redis Cluster
+#       ##
+#       # sentinel_master should be set when using Redis Sentinel to indicate the Master Node
+#       sentinel_master: ''
+
+#       ## Supported by all Redis Client Types ###############################
+#       ## See the go-redis documentation at https://github.com/go-redis/redis/blob/master/options.go
+#       ## for more information on tuning these settings
+
+#       # protocol defines the protocol for connecting to redis (unix or tcp). tcp is default
+#       protocol: tcp
+#       # password provides the redis password. default is empty string ''
+#       password: ''
+#       # db is the Database to be selected after connecting to the server. default is 0
+#       db: 0
+#       # max_retries is the maximum number of retries before giving up on the command
+#       max_retries: 0
+#       # min_retry_backoff_ms is the minimum backoff time between each retry
+#       min_retry_backoff_ms: 8
+#       # max_retry_backoff_ms is the maximum backoff time between each retry
+#       max_retry_backoff_ms: 512
+#       # dial_timeout_ms is the timeout for establishing new connections
+#       dial_timeout_ms: 5000
+#       # read_timeout_ms is the timeout for socket reads. If reached, commands will fail with a timeout instead of blocking.
+#       read_timeout_ms: 3000
+#       # write_timeout_ms is the timeout for socket writes. If reached, commands will fail with a timeout instead of blocking.
+#       write_timeout_ms: 3000
+#       # pool_size is the maximum number of socket connections.
+#       pool_size: 20
+#       # min_idle_conns is the minimum number of idle connections which is useful when establishing new connection is slow.
+#       min_idle_conns: 0
+#       # max_conn_age_ms is the connection age at which client retires (closes) the connection.
+#       max_conn_age_ms: 0
+#       # pool_timeout_ms is the amount of time client waits for connection if all connections are busy before returning an error.
+#       pool_timeout_ms: 4000
+#       # idle_timeout_ms is the amount of time after which client closes idle connections.
+#       idle_timeout_ms: 300000
+#       # idle_check_frequency_ms is the frequency of idle checks made by idle connections reaper.
+#       idle_check_frequency_ms: 60000
+#}
+
+    {% endif %}
+
+  {% endfor %}
+
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
-{% else %}
+{% endif %}
+{#
 # caches:
 #   default:
 #     # provider defines what kind of cache Trickster uses
@@ -149,4 +287,4 @@ caches:
 #     "404": 3000
 #     "500": 3000
 #     "502": 3000
-{% endif %}
+#}

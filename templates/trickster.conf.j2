@@ -1,4 +1,7 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 ---
+# {{ ansible_managed }}
+#
 # Trickster 2.0 Example Configuration File - Exhaustive
 #
 # To use this, run: trickster -config /path/to/example.full.yaml
@@ -13,22 +16,22 @@
 # Copyright 2018 The Trickster Authors
 #
 
-{% include 'trickster_conf/main.j2' %}
+{% include 'trickster.d/main.j2' %}
 
-{% include 'trickster_conf/frontends.j2' %}
+{% include 'trickster.d/frontends.j2' %}
 
-{% include 'trickster_conf/caches.j2' %}
+{% include 'trickster.d/caches.j2' %}
 
-{% include 'trickster_conf/backends.j2' %}
+{% include 'trickster.d/backends.j2' %}
 
-{% include 'trickster_conf/rules.j2' %}
+{% include 'trickster.d/rules.j2' %}
 
-{% include 'trickster_conf/request_rewriters.j2' %}
+{% include 'trickster.d/request_rewriters.j2' %}
 
-{% include 'trickster_conf/tracing.j2' %}
+{% include 'trickster.d/tracing.j2' %}
 
-{% include 'trickster_conf/metrics.j2' %}
+{% include 'trickster.d/metrics.j2' %}
 
-{% include 'trickster_conf/reloading.j2' %}
+{% include 'trickster.d/reloading.j2' %}
 
-{% include 'trickster_conf/logging.j2' %}
+{% include 'trickster.d/logging.j2' %}

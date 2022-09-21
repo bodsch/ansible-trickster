@@ -72,4 +72,26 @@
   when:
     - trickster_system_user != "root"
 
+- name: create ansible local facts directory
+  file:
+    dest: /etc/ansible/facts.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: merge trickster configuration between defaults and custom
+  set_fact:
+    trickster_service_config: "{{ trickster_defaults_service_config | combine( trickster_service_config, recursive=True ) }}"
+    trickster_main: "{{ trickster_defaults_main | combine( trickster_main, recursive=True ) }}"
+    trickster_frontend: "{{ trickster_defaults_frontend | combine( trickster_frontend, recursive=True ) }}"
+    trickster_caches: "{{ trickster_defaults_caches | combine( trickster_caches, recursive=True ) }}"
+    trickster_backends: "{{ trickster_defaults_backends | combine( trickster_backends, recursive=True ) }}"
+    trickster_rules: "{{ trickster_defaults_rules | combine( trickster_rules, recursive=True ) }}"
+    trickster_request_rewriters: "{{ trickster_defaults_request_rewriters | combine( trickster_request_rewriters, recursive=True ) }}"
+    trickster_tracing: "{{ trickster_defaults_tracing | combine( trickster_tracing, recursive=True ) }}"
+    trickster_metrics: "{{ trickster_defaults_metrics | combine( trickster_metrics, recursive=True ) }}"
+    trickster_reloading: "{{ trickster_defaults_reloading | combine( trickster_reloading, recursive=True ) }}"
+    trickster_logging: "{{ trickster_defaults_logging | combine( trickster_logging, recursive=True ) }}"
+
 ...
