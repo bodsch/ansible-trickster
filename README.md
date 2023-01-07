@@ -27,7 +27,6 @@ You can also look at the [molecule](molecule/default/group_vars/all) test.
 Tested on
 
 * ArchLinux
-* ArtixLinux
 * Debian based
     - Debian 10 / 11
     - Ubuntu 20.04

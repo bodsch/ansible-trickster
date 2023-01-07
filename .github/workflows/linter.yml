@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - testing
-
+      - feature/**
 jobs:
   lint:
     name: linting
