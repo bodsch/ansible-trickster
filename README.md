@@ -212,15 +212,6 @@ trickster_logging:
 [upstream doku](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml)
 
 
-
-## Local Testing
-
-To run a standard molecule environment with only default test scenario:
-
-```bash
-tox -e py29-ansible29 -- molecule test
-```
-
 ---
 
 ## Author and License

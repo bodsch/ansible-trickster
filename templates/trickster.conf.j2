@@ -1,20 +1,6 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
 ---
 # {{ ansible_managed }}
-{#
-# Trickster 2.0 Example Configuration File - Exhaustive
-#
-# To use this, run: trickster -config /path/to/example.full.yaml
-#
-# This file contains descriptions and examples for all
-# Trickster configuration options. More documentation is
-# available at https://github.com/trickstercache/trickster/docs/
-#
-# Optional configs are commented out, required configs are uncommented
-# and set to common values that let you try it out with Prometheus
-#
-# Copyright 2018 The Trickster Authors
-#}
 
 {% include 'trickster.d/main.j2' %}
 {% include 'trickster.d/frontends.j2' %}
