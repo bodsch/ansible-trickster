@@ -15,7 +15,7 @@ trickster_defaults_directory: /etc/default
 # ------------------------------------------------------------------------------------------------
 
 trickster_defaults_service_config:
-  config_file: /etc/trickster.yml
+  config_file: /etc/trickster/config.yml
   # e.g. http://prometheus:9090
   origin:
     url: ''

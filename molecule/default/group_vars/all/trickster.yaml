@@ -1,5 +1,9 @@
 ---
 
+trickster_service_config:
+  log:
+    level: debug
+
 trickster_backends:
   prometheus:
     provider: prometheus

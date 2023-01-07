@@ -1,7 +1,7 @@
 ---
 
 - name: daemon-reload
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     force: true
   notify: restart trickster
@@ -9,14 +9,14 @@
     - ansible_service_mgr == 'systemd'
 
 - name: restart trickster
-  systemd:
+  ansible.builtin.systemd:
     name: trickster
     state: restarted
   when: trickster_service_state != 'stopped'
 
 - name: reload trickster
   become: true
-  service:
+  ansible.builtin.service:
     name: trickster
     state: reloaded
 

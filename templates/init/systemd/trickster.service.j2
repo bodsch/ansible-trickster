@@ -6,20 +6,12 @@ Documentation     = https://github.com/trickstercache/trickster
 After             = network.target
 
 [Service]
-EnvironmentFile   = {{ sysconfig_directory }}/trickster
+EnvironmentFile   = {{ trickster_defaults_directory }}/trickster
 
 User             = {{ trickster_system_user }}
 Group            = {{ trickster_system_group }}
 
 # ExecStartPre      = /bin/bash -l -c 'env >/tmp/trickster.err'
-# ExecStartPre      = {{ trickster_bin }} \
-#   --config ${TRICKSTER_CONFIG} \
-#   --log-level ${TRICKSTER_LOG_LEVEL} \
-#   --validate-config
-# ExecStart         = {{ trickster_bin }} \
-#   --config ${TRICKSTER_CONFIG} \
-#   --log-level ${TRICKSTER_LOG_LEVEL}
-
 ExecStartPre     = /usr/bin/trickster $OPTIONS --log-level debug --validate-config
 
 ExecReload       = /bin/kill -HUP $MAINPID

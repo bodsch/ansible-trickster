@@ -1,9 +1,17 @@
 ---
 
+- name: create trickster config directory
+  ansible.builtin.file:
+    path: "{{ trickster_service_config.config_file | dirname }}"
+    state: directory
+    owner: "{{ trickster_system_user }}"
+    group: "{{ trickster_system_group }}"
+    mode: 0755
+
 - name: create trickster config
-  template:
-    src: trickster.j2
-    dest: "{{ sysconfig_directory }}/trickster"
+  ansible.builtin.template:
+    src: trickster.conf.j2
+    dest: "{{ trickster_service_config.config_file }}"
     mode: 0644
   notify:
     - restart trickster

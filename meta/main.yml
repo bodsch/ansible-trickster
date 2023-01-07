@@ -7,7 +7,8 @@ galaxy_info:
   author: Bodo Schulz
   description: ansible role for install and configure Trickster
   license: Apache 2.0
-  min_ansible_version: 2.9
+
+  min_ansible_version: "2.10"
   platforms:
     - name: Ubuntu
       versions:
@@ -17,10 +18,10 @@ galaxy_info:
         - focal
     - name: Debian
       versions:
-        # 9
-        - etch
         # 10
         - buster
+        - bullseye
+
   galaxy_tags:
     - monitoring
     - prometheus
