@@ -21,6 +21,8 @@ trickster_frontend: {}
 
 trickster_caches: {}
 
+trickster_negative_caches: {}
+
 trickster_backends: {}
 
 trickster_rules: {}

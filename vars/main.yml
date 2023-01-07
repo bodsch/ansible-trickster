@@ -17,10 +17,16 @@ trickster_defaults_directory: /etc/default
 trickster_defaults_service_config:
   config_file: /etc/trickster.yml
   # e.g. http://prometheus:9090
-  origin_url: ''
+  origin:
+    url: ''
   # prometheus or influxdb
-  origin_type: ''
-  log_level: info
+    type: ''
+  log:
+    level: info
+  metrics:
+    port: ""
+  proxy:
+    port: ""
 
 trickster_defaults_main:
   # default is 0, which means ignored
@@ -38,16 +44,18 @@ trickster_defaults_main:
 
 trickster_defaults_frontend:
   # listen_port defines the port on which Tricksters Front-end HTTP Proxy server listens.
-  listen_port: 8480
+  listen:
+    port: 8480
   # listen_address defines the ip on which Tricksters Front-end HTTP Proxy server listens.
   # empty by default, listening on all interfaces
-  listen_address: '0.0.0.0'
+    address: '0.0.0.0'
   # tls_listen_address defines the ip on which Tricksters Front-end TLS Proxy server listens.
   # empty by default, listening on all interfaces
-  tls_listen_address: ""
+  tls_listen:
+    address: ""
   # tls_listen_port defines the port on which Tricksters Front-end TLS Proxy server listens.
   # The default is 0, which means TLS is not used, even if certificates are configured below.
-  tls_listen_port: ""
+    port: ""
   # connections_limit defines the maximum number of concurrent connections
   # Tricksters Proxy server may handle at any time.
   # 0 by default, unlimited.
@@ -230,28 +238,28 @@ trickster_defaults_caches: {}
 #       flush_interval_ms: 5000
 #       max_size_bytes: 536870912
 #       size_backoff_bytes: 16777216
-# negative_caches:
-#   # default:
-#   # The default negative cache config, mapped by all backends by default,
-#   # is empty unless you populate it. Update it by adding entries here in the format of:
-#   # "code": ttl_in_ms
-#   general:
-#     "400": 3000
-#     "404": 3000
-#     "500": 3000
-#     "502": 3000
 
+trickster_defaults_negative_caches:
+  # default:
+  # The default negative cache config, mapped by all backends by default,
+  # is empty unless you populate it. Update it by adding entries here in the format of:
+  # "code": ttl_in_ms
+  general:
+    "400": 3000
+    "404": 3000
+    "500": 3000
+    "502": 3000
 
-trickster_defaults_rules:
-trickster_defaults_request_rewriters:
-trickster_defaults_tracing:
+trickster_defaults_rules: {}
+trickster_defaults_request_rewriters: {}
+trickster_defaults_tracing: {}
 
 trickster_defaults_metrics:
   enabled: true
   listen_port: 8481
   listen_address: 127.0.0.1
 
-trickster_defaults_reloading:
+trickster_defaults_reloading: {}
 
 trickster_defaults_logging:
   # Possible values are 'debug', 'info', 'warn', 'error'

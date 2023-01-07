@@ -1,6 +1,6 @@
 ---
 
-- name: download trickster binary to local folder
+- name: download trickster archive
   become: false
   delegate_to: "{{ trickster_delegate_to }}"
   run_once: "{{ 'false' if trickster_direct_download else 'true' }}"

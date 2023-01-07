@@ -1,9 +1,12 @@
-{% if trickster_logging is defined and trickster_logging | count > 0 %}
+{% set _valid_log_level = ["debug", "info", "warn", "error"] %}
+{% if trickster_logging is defined and
+      trickster_logging | count > 0 %}
+
 logging:
   {% set b = trickster_logging %}
   {% if b.log_level is defined and
         b.log_level | string | length > 0 %}
-    {% if b.log_level in ["debug", "info", "warn", "error"] %}
+    {% if b.log_level in _valid_log_level %}
       {% set _log_level = b.log_level %}
     {% else %}
       {% set _log_level = "info" %}

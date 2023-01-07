@@ -1,5 +1,6 @@
 {% if trickster_backends is defined and trickster_backends | count > 0 %}
   {% set b = trickster_backends %}
+
 backends:
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
 {% endif %}

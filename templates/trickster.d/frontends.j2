@@ -1,5 +1,6 @@
 {% if trickster_frontend is defined and
       trickster_frontend | count > 0 %}
+
 frontend:
   {% set b = trickster_frontend %}
   {% if b.listen_port is defined and

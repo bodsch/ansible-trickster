@@ -39,6 +39,33 @@
     - trickster_dependencies is defined
     - trickster_dependencies | count > 0
 
+
+- name: detect latest release
+  block:
+    - name: get latest release
+      delegate_to: localhost
+      become: false
+      run_once: true
+      uri:
+        url: "https://api.github.com/repos/tricksterproxy/trickster/releases/latest"
+        method: GET
+        return_content: true
+        status_code: 200
+        body_format: json
+        validate_certs: false
+        user: "{{ lookup('env', 'GH_USER') | default(omit) }}"
+        password: "{{ lookup('env', 'GH_TOKEN') | default(omit) }}"
+      # no_log: "{{ not lookup('env', 'ANSIBLE_DEBUG') | bool }}"
+      register: _latest_release
+      until: _latest_release.status == 200
+      retries: 5
+
+    - name: set trickster version to {{ _latest_release.json.tag_name[1:] }}
+      set_fact:
+        trickster_version: "{{ _latest_release.json.tag_name[1:] }}"
+  when:
+    - trickster_version == "latest"
+
 - name: detect installed trickster binary
   stat:
     path: "{{ trickster_install_path }}/trickster"
@@ -53,6 +80,8 @@
     mode: 0750
 
 - name: user and group handling
+  when:
+    - trickster_system_user != "root"
   block:
     - name: create trickster group
       group:
@@ -69,8 +98,14 @@
         system: true
         createhome: false
         home: /nonexistent
-  when:
-    - trickster_system_user != "root"
+
+- name: create install directory
+  file:
+    path: "{{ trickster_install_path }}"
+    state: directory
+    owner: "{{ trickster_system_user }}"
+    group: "{{ trickster_system_group }}"
+    mode: 0755
 
 - name: create ansible local facts directory
   file:
@@ -86,6 +121,7 @@
     trickster_main: "{{ trickster_defaults_main | combine( trickster_main, recursive=True ) }}"
     trickster_frontend: "{{ trickster_defaults_frontend | combine( trickster_frontend, recursive=True ) }}"
     trickster_caches: "{{ trickster_defaults_caches | combine( trickster_caches, recursive=True ) }}"
+    trickster_negative_caches: "{{ trickster_defaults_negative_caches | combine( trickster_negative_caches, recursive=True ) }}"
     trickster_backends: "{{ trickster_defaults_backends | combine( trickster_backends, recursive=True ) }}"
     trickster_rules: "{{ trickster_defaults_rules | combine( trickster_rules, recursive=True ) }}"
     trickster_request_rewriters: "{{ trickster_defaults_request_rewriters | combine( trickster_request_rewriters, recursive=True ) }}"

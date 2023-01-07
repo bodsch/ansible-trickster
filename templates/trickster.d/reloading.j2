@@ -1,4 +1,6 @@
-{% if trickster_reloading is defined and trickster_reloading | count > 0 %}
+{% if trickster_reloading is defined and
+      trickster_reloading | count > 0 %}
+
 reloading:
   {% set b = trickster_reloading %}
   {% if b.listen_port is defined and

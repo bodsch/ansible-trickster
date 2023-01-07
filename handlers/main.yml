@@ -14,4 +14,10 @@
     state: restarted
   when: trickster_service_state != 'stopped'
 
+- name: reload trickster
+  become: true
+  service:
+    name: trickster
+    state: reloaded
+
 ...

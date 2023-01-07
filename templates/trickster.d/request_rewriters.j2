@@ -1,4 +1,6 @@
-{% if trickster_request_rewriters is defined and trickster_request_rewriters | count > 0 %}
+{% if trickster_request_rewriters is defined and
+      trickster_request_rewriters | count > 0 %}
+
 request_rewriters:
   {% set b = trickster_request_rewriters %}
 {{ b | to_nice_yaml( indent=2, width=50, explicit_start=False, explicit_end=False) | indent(2, True) }}
