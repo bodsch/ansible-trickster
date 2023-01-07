@@ -1,0 +1,26 @@
+{% if trickster_frontend is defined and
+      trickster_frontend | count > 0 %}
+
+frontend:
+  {% set b = trickster_frontend %}
+  {% if b.listen_port is defined and
+        b.listen_port | string | length > 0 %}
+  listen_port: {{ b.listen_port }}
+  {% endif %}
+  {% if b.listen_address is defined and
+        b.listen_address | string | length > 0 %}
+  listen_address: {{ b.listen_address }}
+  {% endif %}
+  {% if b.tls_listen_port is defined and
+        b.tls_listen_port | string | length > 0 %}
+  tls_listen_port: {{ b.tls_listen_port }}
+  {% endif %}
+  {% if b.tls_listen_address is defined and
+        b.tls_listen_address | string | length > 0 %}
+  tls_listen_address: {{ b.tls_listen_address }}
+  {% endif %}
+  {% if b.connections_limit is defined and
+        b.connections_limit | string | length > 0 %}
+  connections_limit: {{ b.connections_limit }}
+  {% endif %}
+{% endif %}

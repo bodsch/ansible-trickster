@@ -1,18 +1,37 @@
 ---
 
+trickster_service_config:
+  log:
+    level: debug
+
 trickster_backends:
-  default:
+  prometheus:
     provider: prometheus
     is_default: true
     origin_url: http://prometheus:9090
+  influx:
+    provider: influxdb
+    is_default: false
+    origin_url: http://influxdb:8176
 
 trickster_caches:
   default:
     provider: redis
     redis:
       endpoint: 'redis:6379'
-      endpoints:
-        - redis:6379
-      protocol: tcp
+      # endpoints:
+      #   - redis:6379
+      # protocol: tcp
       db: 0
+    index:
+      max_size_backoff_objects: 100
+
+trickster_metrics:
+  # listen_port defines the port that Tricksters metrics server listens on at /metrics
+  # 8481 is the default
+  listen_port: 8481
+  # listen_address defines the ip that Tricksters metrics server listens on at /metrics
+  # empty by default, listening on all interfaces
+  # listen_address: ''
+
 ...

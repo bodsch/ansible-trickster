@@ -1,10 +1,20 @@
 
 # Ansible Role:  `trickster`
 
-
 [Trickster](https://github.com/tricksterproxy/trickster) ist an Open Source Dashboard Accelerator for Time Series Databases.
 
 This ansible role installs and configure Trickster.
+
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-trickster/main.yml?branch=main)][ci]
+[![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-trickster)][issues]
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-trickster)][releases]
+[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
+
+[ci]: https://github.com/bodsch/ansible-trickster/actions
+[issues]: https://github.com/bodsch/ansible-trickster/issues?q=is%3Aopen+is%3Aissue
+[releases]: https://github.com/bodsch/ansible-trickster/releases
+[quality]: https://galaxy.ansible.com/bodsch/trickster
+
 
 ## Usage
 
@@ -17,14 +27,9 @@ You can also look at the [molecule](molecule/default/group_vars/all) test.
 Tested on
 
 * ArchLinux
-* ArtixLinux
 * Debian based
     - Debian 10 / 11
     - Ubuntu 20.04
-* RedHat based
-    - Alma Linux 8
-    - Rocky Linux 8
-    - OracleLinux 8
 
 ## Contribution
 
@@ -206,17 +211,15 @@ trickster_logging:
 [upstream doku](https://github.com/trickstercache/trickster/blob/main/examples/conf/example.full.yaml)
 
 
+---
 
-## Local Testing
+## Author and License
 
-To run a standard molecule environment with only default test scenario:
-
-```bash
-tox -e py29-ansible29 -- molecule test
-```
+- Bodo Schulz
 
 ## License
 
 This project is licensed under Apache License. See [LICENSE](/LICENSE) for more details.
 
 
+**FREE SOFTWARE, HELL YEAH!**

@@ -1,0 +1,17 @@
+{% if trickster_metrics is defined and
+      trickster_metrics | count > 0 %}
+  {% set b = trickster_metrics %}
+  {% if b.enabled is defined and
+        b.enabled %}
+
+metrics:
+    {% if b.listen_port is defined and
+          b.listen_port | string | length > 0 %}
+  listen_port: {{ b.listen_port }}
+    {% endif %}
+    {% if b.listen_address is defined and
+          b.listen_address | string | length > 0 %}
+  listen_address: {{ b.listen_address }}
+    {% endif %}
+  {% endif %}
+{% endif %}

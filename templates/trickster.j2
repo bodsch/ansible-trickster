@@ -1,5 +1,38 @@
-# ansible
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
 
+{% set _loglevel = "info" %}
+{% if trickster_service_config.log.level is defined and
+      trickster_service_config.log.level in ["debug", "info", "warn", "error"] %}
+  {% set _loglevel = trickster_service_config.log.level %}
+{% endif %}
+
+OPTIONS="
+  --config {{ trickster_service_config.config_file }} \
+  --log-level {{ _loglevel }} \
+  {% if trickster_service_config.origin.url is defined and
+        trickster_service_config.origin.url | string | length > 0 %}
+  --origin-url {{ trickster_service_config.origin.url }} \
+  {% endif %}
+  {% if trickster_service_config.origin.type is defined and
+        trickster_service_config.origin.type in ["prometheus", "influxdb"] %}
+  --origin-type {{ trickster_service_config.origin.type }} \
+  {% endif %}
+  {% if trickster_service_config.metrics.port is defined and
+        trickster_service_config.metrics.port | string | length > 0 %}
+  --metrics-port {{ trickster_service_config.metrics.port }} \
+  {% endif %}
+  {% if trickster_service_config.proxy.port is defined and
+        trickster_service_config.proxy.port | string | length > 0 %}
+  --proxy-port {{ trickster_service_config.metrics.port }} \
+  {% endif %}
+  {% if trickster_main.instance_id is defined and
+        trickster_main.instance_id | string | length > 0 %}
+  --instance-id {{ trickster_main.instance_id }} \
+  {% endif %}
+"
+
+{#
 # Usage of trickster:
 #   -config string
 #         Path to Trickster Config File
@@ -19,12 +52,4 @@
 #         Validates a Trickster config and exits without running the server
 #   -version
 #         Prints the Trickster version
-
-TRICKSTER_CONFIG="{{ trickster_service_config.config_file }}"
-{% if trickster_service_config.origin_url is defined and trickster_service_config.origin_url | length > 0 %}
-TRICKSTER_ORIGIN_URL="{{ trickster_service_config.origin_url }}"
-{% endif %}
-{% if trickster_service_config.origin_type is defined and trickster_service_config.origin_type | length > 0 %}
-TRICKSTER_ORIGIN_TYPE="{{ trickster_service_config.origin_type }}"
-{% endif %}
-TRICKSTER_LOG_LEVEL="{{ trickster_service_config.log_level }}"
+#}

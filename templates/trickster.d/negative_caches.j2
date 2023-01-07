@@ -1,0 +1,37 @@
+{% if trickster_negative_caches is defined and
+      trickster_negative_caches | count > 0 %}
+
+{#
+# Negative Caching Configurations
+# A Negative Cache is a map of HTTP Status Codes that are cached for the specified duration,
+# used for temporarily caching failures (e.g., 404s for 10 seconds)
+#
+# By default, each Origin Configuration maps to the default negative cache which you can
+# configure below, or can define your own negative caches, and specify them in your backend configs.
+# See /docs/negative-caching.md for more info.
+#
+# negative_caches:
+#   # default:
+#   # The default negative cache config, mapped by all backends by default,
+#   # is empty unless you populate it. Update it by adding entries here in the format of:
+#   # "code": ttl_in_ms
+
+# Heres a pre-populated negative cache config ready to be uncommented and used in an backend config
+# The general negative cache config will cache common failure response codes for 3 seconds
+#
+# negative_caches:
+#   general:
+#     "400": 3000
+#     "404": 3000
+#     "500": 3000
+#     "502": 3000
+#}
+negative_caches:
+  {% set b = trickster_negative_caches %}
+  {% for cache, values in b.items() %}
+  {{ cache }}:
+    {% for k, v in values.items() %}
+    "{{ k }}": {{ v }}
+    {% endfor %}
+  {% endfor %}
+{% endif %}

@@ -1,0 +1,204 @@
+{% if trickster_caches is defined and
+      trickster_caches | count > 0 %}
+
+caches:
+  {% set b = trickster_caches %}
+  {% for cache, values in b.items() %}
+  {{ cache }}:
+    {% if cache == "default" %}
+    {# INDEX #}
+      {% if values.index is defined and
+            values.index | type == "dict" and
+            values.index | count > 0 %}
+    index:
+        {% if values.index.reap_interval_ms is defined and
+              values.index.reap_interval_ms | string | length > 0 %}
+      reap_interval_ms: {{ values.index.reap_interval_ms }}
+        {% endif %}
+        {% if values.index.flush_interval_ms is defined and
+              values.index.flush_interval_ms | string | length > 0 %}
+      flush_interval_ms: {{ values.index.flush_interval_ms }}
+        {% endif %}
+        {% if values.index.max_size_bytes is defined and
+              values.index.max_size_bytes | string | length > 0 %}
+      max_size_bytes: {{ values.index.max_size_bytes }}
+        {% endif %}
+        {% if values.index.max_size_backoff_bytes is defined and
+              values.index.max_size_backoff_bytes | string | length > 0 %}
+      max_size_backoff_bytes: {{ values.index.max_size_backoff_bytes }}
+        {% endif %}
+        {% if values.index.max_size_objects is defined and
+              values.index.max_size_objects | string | length > 0 %}
+      max_size_objects: {{ values.index.max_size_objects }}
+        {% endif %}
+        {% if values.index.max_size_backoff_objects is defined and
+              values.index.max_size_backoff_objects | string | length > 0 %}
+      max_size_backoff_objects: {{ values.index.max_size_backoff_objects }}
+        {% endif %}
+        {% if values.index.size_backoff_bytes is defined and
+              values.index.size_backoff_bytes | string | length > 0 %}
+      size_backoff_bytes: {{ values.index.size_backoff_bytes }}
+        {% endif %}
+      {% endif %}
+    {# PROVIDER #}
+      {% set _default_cache_provider = "memory" %}
+      {% if values.provider is defined and
+            values.provider | string | length > 0 %}
+        {% if values.provider in ["bbolt", "badger", "filesystem", "memory", "redis"] %}
+          {% set _default_cache_provider = values.provider %}
+        {% endif %}
+    provider: {{ _default_cache_provider }}
+      {% endif %}
+      {% if values.index is defined and
+            values.index | type == "dict" and
+            values.index | count > 0 and
+            _default_cache_provider in ["bbolt", "filesystem", "memory"] %}
+    index:
+        {% for k, v in values.index.items() %}
+          {% if v.reap_interval_ms is defined and
+                v.reap_interval_ms | string | length > 0 %}
+      reap_interval_ms: {{ v.reap_interval_ms }}
+          {% endif %}
+          {% if v.flush_interval_ms is defined and
+                v.flush_interval_ms | string | length > 0 %}
+      flush_interval_ms: {{ v.flush_interval_ms }}
+          {% endif %}
+          {% if v.max_size_bytes is defined and
+                v.max_size_bytes | string | length > 0 %}
+      max_size_bytes: {{ v.max_size_bytes }}
+          {% endif %}
+          {% if v.max_size_backoff_bytes is defined and
+                v.max_size_backoff_bytes | string | length > 0 %}
+      max_size_backoff_bytes: {{ v.max_size_backoff_bytes }}
+          {% endif %}
+          {% if v.max_size_objects is defined and
+                v.max_size_objects | string | length > 0 %}
+      max_size_objects: {{ v.max_size_objects }}
+          {% endif %}
+          {% if v.max_size_backoff_objects is defined and
+                v.max_size_backoff_objects | string | length > 0 %}
+      max_size_backoff_objects: {{ v.max_size_backoff_objects }}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {# REDIS #}
+      {% if values.redis is defined and
+            values.redis | type == "dict" and
+            values.redis | count > 0 and
+            _default_cache_provider == "redis" %}
+    redis:
+        {% if values.redis.client_type is defined and
+              values.redis.client_type | default('standard') in ["standard", "cluster", "sentinel"] %}
+      client_type: {{ values.redis.client_type }}
+        {% endif %}
+        {% if values.redis.endpoint is defined and
+              values.redis.endpoint | string | length > 0 %}
+      endpoint: {{ values.redis.endpoint }}
+        {% endif %}
+        {# #}
+        {% if values.redis.client_type is defined and
+              values.redis.client_type | default('standard') == "cluster" and
+              values.redis.endpoints is defined and
+              values.redis.endpoints | type == "list" and
+              values.redis.endpoints | count > 0 %}
+      endpoints:
+          {% for e in values.redis.endpoints %}
+        - {{ e }}
+          {% endfor %}
+        {% endif %}
+        {% if values.redis.client_type is defined and
+              values.redis.client_type == "sentinel" and
+              values.redis.sentinel_master is defined and
+              values.redis.sentinel_master | string | length > 0 %}
+      sentinel_master: {{ values.redis.sentinel_master }}
+        {% endif %}
+        {% if values.redis.protocol is defined and
+              values.redis.protocol in ["tcp", "udp"] %}
+      protocol: {{ values.redis.protocol }}
+        {% endif %}
+        {% if values.redis.db is defined and
+              values.redis.db | string | length > 0 %}
+      db: {{ values.redis.db }}
+        {% endif %}
+        {% if values.redis.max_retries is defined and
+              values.redis.max_retries | string | length > 0 %}
+      max_retries: {{ values.redis.max_retries }}
+        {% endif %}
+        {% if values.redis.min_retry_backoff_ms is defined and
+              values.redis.min_retry_backoff_ms | string | length > 0 %}
+      min_retry_backoff_ms: {{ values.redis.min_retry_backoff_ms }}
+        {% endif %}
+        {% if values.redis.max_retry_backoff_ms is defined and
+              values.redis.max_retry_backoff_ms | string | length > 0 %}
+      max_retry_backoff_ms: {{ values.redis.max_retry_backoff_ms }}
+        {% endif %}
+        {% if values.redis.dial_timeout_ms is defined and
+              values.redis.dial_timeout_ms | string | length > 0 %}
+      dial_timeout_ms: {{ values.redis.dial_timeout_ms }}
+        {% endif %}
+        {% if values.redis.read_timeout_ms is defined and
+              values.redis.read_timeout_ms | string | length > 0 %}
+      read_timeout_ms: {{ values.redis.read_timeout_ms }}
+        {% endif %}
+        {% if values.redis.write_timeout_ms is defined and
+              values.redis.write_timeout_ms | string | length > 0 %}
+      write_timeout_ms: {{ values.redis.write_timeout_ms }}
+        {% endif %}
+        {% if values.redis.pool_size is defined and
+              values.redis.pool_size | string | length > 0 %}
+      pool_size: {{ values.redis.pool_size }}
+        {% endif %}
+        {% if values.redis.password is defined and
+              values.redis.password | string | length > 0 %}
+      password: {{ values.redis.password }}
+        {% endif %}
+        {% if values.redis.min_idle_conns is defined and
+              values.redis.min_idle_conns | string | length > 0 %}
+      min_idle_conns: {{ values.redis.min_idle_conns }}
+        {% endif %}
+        {% if values.redis.max_conn_age_ms is defined and
+              values.redis.max_conn_age_ms | string | length > 0 %}
+      max_conn_age_ms: {{ values.redis.max_conn_age_ms }}
+        {% endif %}
+        {% if values.redis.pool_timeout_ms is defined and
+              values.redis.pool_timeout_ms | string | length > 0 %}
+      pool_timeout_ms: {{ values.redis.pool_timeout_ms }}
+        {% endif %}
+        {% if values.redis.idle_timeout_ms is defined and
+              values.redis.idle_timeout_ms | string | length > 0 %}
+      idle_timeout_ms: {{ values.redis.idle_timeout_ms }}
+        {% endif %}
+        {% if values.redis.idle_check_frequency_ms is defined and
+              values.redis.idle_check_frequency_ms | string | length > 0 %}
+      idle_check_frequency_ms: {{ values.redis.idle_check_frequency_ms }}
+        {% endif %}
+      {% endif %}
+    {# FILESYSTEM #}
+      {% if values.filesystem is defined and
+            values.filesystem | type == "dict" and
+            values.filesystem | count > 0 and
+            _default_cache_provider == "filesystem" %}
+    filesystem:
+        {% if values.filesystem.cache_path is defined and
+              values.filesystem.cache_path | string | length > 0 %}
+      cache_path: {{ values.filesystem.cache_path }}
+        {% endif %}
+      {% endif %}
+    {# BBOLT #}
+      {% if values.bbolt is defined and
+            values.bbolt | type == "dict" and
+            values.bbolt | count > 0 and
+            _default_cache_provider == "bbolt" %}
+    bbolt:
+        {% if values.bbolt.filename is defined and
+              values.bbolt.filename | string | length > 0 %}
+      filename: {{ values.bbolt.filename }}
+        {% endif %}
+        {% if values.bbolt.bucket is defined and
+              values.bbolt.bucket | string | length > 0 %}
+      bucket: {{ values.bbolt.bucket }}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}

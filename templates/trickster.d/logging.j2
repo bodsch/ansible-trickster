@@ -1,0 +1,20 @@
+{% set _valid_log_level = ["debug", "info", "warn", "error"] %}
+{% if trickster_logging is defined and
+      trickster_logging | count > 0 %}
+
+logging:
+  {% set b = trickster_logging %}
+  {% if b.log_level is defined and
+        b.log_level | string | length > 0 %}
+    {% if b.log_level in _valid_log_level %}
+      {% set _log_level = b.log_level %}
+    {% else %}
+      {% set _log_level = "info" %}
+    {% endif %}
+  log_level: {{ _log_level }}
+  {% endif %}
+  {% if b.log_file is defined and
+        b.log_file | string | length > 0 %}
+  log_file: {{ b.log_file }}
+  {% endif %}
+{% endif %}

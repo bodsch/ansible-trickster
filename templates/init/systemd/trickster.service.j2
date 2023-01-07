@@ -1,0 +1,25 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description       = Dashboard Accelerator for Prometheus and HTTP Reverse Proxy Cache
+Documentation     = https://github.com/trickstercache/trickster
+After             = network.target
+
+[Service]
+EnvironmentFile   = {{ trickster_defaults_directory }}/trickster
+
+User             = {{ trickster_system_user }}
+Group            = {{ trickster_system_group }}
+
+# ExecStartPre      = /bin/bash -l -c 'env >/tmp/trickster.err'
+ExecStartPre     = /usr/bin/trickster $OPTIONS --log-level debug --validate-config
+
+ExecReload       = /bin/kill -HUP $MAINPID
+ExecStart        = /usr/bin/trickster $OPTIONS
+
+LimitNOFILE      = 65000
+SyslogIdentifier = trickster
+Restart          = always
+
+[Install]
+WantedBy          = multi-user.target

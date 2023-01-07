@@ -2,7 +2,7 @@
 
 - name: Ensure trickster is enabled on boot
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: trickster
     enabled: true

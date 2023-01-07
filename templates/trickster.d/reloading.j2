@@ -1,0 +1,26 @@
+{% if trickster_reloading is defined and
+      trickster_reloading | count > 0 %}
+
+reloading:
+  {% set b = trickster_reloading %}
+  {% if b.listen_port is defined and
+        b.listen_port | string | length > 0 %}
+  listen_port: {{ b.listen_port }}
+  {% endif %}
+  {% if b.listen_address is defined and
+        b.listen_address | string | length > 0 %}
+  listen_address: {{ b.listen_address }}
+  {% endif %}
+  {% if b.handler_path is defined and
+        b.handler_path | string | length > 0 %}
+  handler_path: {{ b.handler_path }}
+  {% endif %}
+  {% if b.drain_timeout_ms is defined and
+        b.drain_timeout_ms | string | length > 0 %}
+  drain_timeout_ms: {{ b.drain_timeout_ms }}
+  {% endif %}
+  {% if b.rate_limit_ms is defined and
+        b.rate_limit_ms | string | length > 0 %}
+  rate_limit_ms: {{ b.rate_limit_ms }}
+  {% endif %}
+{% endif %}
