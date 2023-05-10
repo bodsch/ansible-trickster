@@ -18,10 +18,6 @@
         - default.yaml
       skip: true
 
-- name: update package cache
-  ansible.builtin.package:
-    update_cache: true
-
 - name: define delegate instance for download handling
   ansible.builtin.set_fact:
     trickster_delegate_to: "{{ ansible_host }}"
@@ -33,13 +29,15 @@
 
 - name: install dependency
   ansible.builtin.package:
-    name: "{{ trickster_dependencies }}"
+    name: "{{ trickster_requirements }}"
     state: present
   when:
-    - trickster_dependencies is defined
-    - trickster_dependencies | count > 0
+    - trickster_requirements | default([]) | count > 0
 
-- name: detect latest release
+- name: get latest release
+  delegate_to: localhost
+  become: false
+  run_once: true
   when:
     - trickster_version == "latest"
   block:
@@ -47,23 +45,16 @@
       delegate_to: localhost
       become: false
       run_once: true
-      ansible.builtin.uri:
-        url: "https://api.github.com/repos/tricksterproxy/trickster/releases/latest"
-        method: GET
-        return_content: true
-        status_code: 200
-        body_format: json
-        validate_certs: false
+      bodsch.scm.github_latest:
+        project: tricksterproxy
+        repository: trickster
         user: "{{ lookup('env', 'GH_USER') | default(omit) }}"
         password: "{{ lookup('env', 'GH_TOKEN') | default(omit) }}"
-      # no_log: "{{ not lookup('env', 'ANSIBLE_DEBUG') | bool }}"
       register: _latest_release
-      until: _latest_release.status == 200
-      retries: 5
 
     - name: re-define trickster_version
       ansible.builtin.set_fact:
-        trickster_version: "{{ _latest_release.json.tag_name[1:] }}"
+        trickster_version: "{{ _latest_release.latest_release }}"
 
 - name: detect installed trickster binary
   ansible.builtin.stat:
@@ -105,14 +96,6 @@
     owner: "{{ trickster_system_user }}"
     group: "{{ trickster_system_group }}"
     mode: 0755
-
-- name: create ansible local facts directory
-  ansible.builtin.file:
-    dest: /etc/ansible/facts.d
-    state: directory
-    owner: root
-    group: root
-    mode: 0775
 
 - name: merge trickster configuration between defaults and custom
   ansible.builtin.set_fact:

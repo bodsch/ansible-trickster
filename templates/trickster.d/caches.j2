@@ -8,7 +8,7 @@ caches:
     {% if cache == "default" %}
     {# INDEX #}
       {% if values.index is defined and
-            values.index | type == "dict" and
+            values.index | bodsch.core.type == "dict" and
             values.index | count > 0 %}
     index:
         {% if values.index.reap_interval_ms is defined and
@@ -50,7 +50,7 @@ caches:
     provider: {{ _default_cache_provider }}
       {% endif %}
       {% if values.index is defined and
-            values.index | type == "dict" and
+            values.index | bodsch.core.type == "dict" and
             values.index | count > 0 and
             _default_cache_provider in ["bbolt", "filesystem", "memory"] %}
     index:
@@ -83,7 +83,7 @@ caches:
       {% endif %}
     {# REDIS #}
       {% if values.redis is defined and
-            values.redis | type == "dict" and
+            values.redis | bodsch.core.type == "dict" and
             values.redis | count > 0 and
             _default_cache_provider == "redis" %}
     redis:
@@ -99,7 +99,7 @@ caches:
         {% if values.redis.client_type is defined and
               values.redis.client_type | default('standard') == "cluster" and
               values.redis.endpoints is defined and
-              values.redis.endpoints | type == "list" and
+              values.redis.endpoints | bodsch.core.type == "list" and
               values.redis.endpoints | count > 0 %}
       endpoints:
           {% for e in values.redis.endpoints %}
@@ -175,7 +175,7 @@ caches:
       {% endif %}
     {# FILESYSTEM #}
       {% if values.filesystem is defined and
-            values.filesystem | type == "dict" and
+            values.filesystem | bodsch.core.type == "dict" and
             values.filesystem | count > 0 and
             _default_cache_provider == "filesystem" %}
     filesystem:
@@ -186,7 +186,7 @@ caches:
       {% endif %}
     {# BBOLT #}
       {% if values.bbolt is defined and
-            values.bbolt | type == "dict" and
+            values.bbolt | bodsch.core.type == "dict" and
             values.bbolt | count > 0 and
             _default_cache_provider == "bbolt" %}
     bbolt:

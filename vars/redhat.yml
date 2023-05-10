@@ -1,5 +1,5 @@
 ---
 
-trickster_dependencies: []
+trickster_requirements: []
 
 trickster_defaults_directory: "/etc/sysconfig"

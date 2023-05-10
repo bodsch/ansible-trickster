@@ -1,4 +1,5 @@
 ---
 
-trickster_dependencies:
+trickster_requirements:
   - curl
+  - iproute
