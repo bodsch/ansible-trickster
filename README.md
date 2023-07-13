@@ -3,6 +3,9 @@
 
 [Trickster](https://github.com/tricksterproxy/trickster) ist an Open Source Dashboard Accelerator for Time Series Databases.
 
+> Further development of this Ansible role has been moved to Collection [bodsch.prometheus](https://github.com/bodsch/ansible-collection-prometheus).
+> **This repository will therefore no longer be actively maintained.**
+
 This ansible role installs and configure Trickster.
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-trickster/main.yml?branch=main)][ci]
